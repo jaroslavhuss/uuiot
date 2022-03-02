@@ -37,7 +37,7 @@ function AppBar() {
                         {Lang.btnLogOff[lang]}
                     </button>
                 }
-                {isAdmin === "Admin" &&
+                {isAdmin === "iotadmin" &&
                     <>
                         <span className="padder" />
                         <span className="user-pill">

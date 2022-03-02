@@ -1,10 +1,13 @@
 export interface UserInterface {
-  name: string;
-  surname: string;
-  form: string;
-  level: string;
-  language: string;
-  Subjects: string[];
+  authLevel: string;
+  createdAt: Date;
   email: string;
+  isUserApproved: boolean;
+  lastLoggedIn: Date;
+  name: string;
   password: string;
+  surname: string;
+  updatedAt: Date;
+  __v: number;
+  _id: string;
 }

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import validator from "validator";
 
-import { authUserFailed } from "../store/reducers/auth";
+import { authUserFailed, authUserSuccess } from "../store/reducers/auth";
 import { Link, useNavigate } from "react-router-dom";
 import Box from "../atoms/Box";
 import Logo from "../atoms/Logo"
@@ -11,13 +11,15 @@ import InputText from "../atoms/forms/InputText";
 import FormErrors from "../atoms/forms/FormErrors";
 import LanguageSwitch from "../atoms/forms/LanguageSwitch";
 import FormSelect from "../atoms/forms/FormSelect";
+
+import { TokenInterface } from "../interface/TokenInterface";
+import { UserInterface } from "../interface/UserInterface";
+
 const Register = () => {
     const navigate = useNavigate();
     const lang = useSelector((data: any) => { return data.language.language })
     const [name, setName] = useState<string>("");
     const [surname, setSurname] = useState<string>("");
-    const [form, setForm] = useState<string>(Lang.formValuesDaily[lang]);
-    const [level, setLevel] = useState<string>("Bc.");
     const [prefferedLanguage, setPrefferedLanguage] = useState<string>("cz");
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
@@ -28,7 +30,7 @@ const Register = () => {
     const dispatch = useDispatch();
     const submitForm = async (e: any) => {
         e.preventDefault();
-        if (name === "" && surname === "" && form === "" && level === "" && prefferedLanguage === "") {
+        if (name === "" && surname === "" && prefferedLanguage === "") {
             setErrorMessage("All fields are mandatory")
             setErrorStatus(false)
             dispatch(authUserFailed())
@@ -45,7 +47,7 @@ const Register = () => {
         }
         else {
             try {
-                const response = await fetch("http://localhost:5001/auth-api/register", {
+                const response: Response = await fetch("http://localhost:5001/auth/signup", {
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -53,22 +55,18 @@ const Register = () => {
                     body: JSON.stringify({
                         name,
                         surname,
-                        level,
-                        form,
                         language: prefferedLanguage,
                         email,
-                        password
+                        password,
+                        confirmedPassword
                     })
                 })
-                const data: { success: boolean, errorMap: { err: [] }, token: string } = await response.json();
-                if (!data.success) {
-                    setErrorStatus(false);
-                    setErrorMessage(JSON.stringify(data.errorMap.err))
-                    dispatch(authUserFailed())
-                } else {
-
-                    navigate("/login");
-                }
+                const data: { access_token: TokenInterface, user: UserInterface } = await response.json();
+                if (!data.access_token) throw new Error("Problem with login!");
+                if (!data.user) throw new Error("Could not fetch user's data");
+                localStorage.setItem("token", JSON.stringify(data.access_token));
+                dispatch(authUserSuccess({ token: data.access_token, user: data.user }));
+                navigate("/dashboard")
             } catch (error) {
                 setErrorStatus(false);
                 //@ts-ignore
