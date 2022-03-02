@@ -1,5 +1,5 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { Route, Routes } from "react-router-dom";
+import { useSelector } from "react-redux";
 /**
  * Admin components
  */
@@ -8,15 +8,12 @@ import AdminPanel from "./routes/AdminRoutes/AdminDashboard";
 import Register from "./routes/Register";
 import Login from "./routes/Login";
 import StudentsDashboard from "./routes/StudentsDashboard";
-import { authUserFailed, authUserSuccess } from "./store/reducers/auth";
-import { useEffect } from "react";
-
 //Global Error
 import ErrorComponent from "./components/Error";
 
+import { GlobalWatcher } from "./utils/setAuthToken"
+import 'bootstrap/dist/css/bootstrap.min.css';
 const App = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
   const data = useSelector((data: {
     error: {
       alerts: string,
@@ -26,6 +23,8 @@ const App = () => {
     return data.error;
   })
 
+
+  GlobalWatcher();
 
 
   return (
