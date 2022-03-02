@@ -11,7 +11,6 @@ import Logo from "../atoms/Logo"
 import InputText from "../atoms/forms/InputText";
 import FormErrors from "../atoms/forms/FormErrors";
 import LanguageSwitch from "../atoms/forms/LanguageSwitch";
-import { TokenInterface } from "../interface/TokenInterface";
 import { UserInterface } from "../interface/UserInterface";
 
 const Login = () => {
@@ -56,62 +55,68 @@ const Login = () => {
                     body: JSON.stringify({ email, password })
                 })
 
-                const data: { access_token: TokenInterface, user: UserInterface } = await response.json();
-                if (!data.access_token) throw new Error("Problem with login!");
-                if (!data.user) throw new Error("Could not fetch user's data");
-
-                localStorage.setItem("token", JSON.stringify(data.access_token));
+                const data: { access_token: string, user: UserInterface, message: string } = await response.json();
+                console.log(data)
+                if (!data.access_token) throw new Error(data.message);
+                if (!data.user) throw new Error("Could not fetch user's data")
+                if (!data.user.isUserApproved) throw new Error("User was not verified yet!")
+                localStorage.setItem("token", data.access_token);
                 dispatch(authUserSuccess({ token: data.access_token, user: data.user }));
-
-
-            } catch (error) {
+            } catch (error: any) {
                 setErrorStatus(false);
-                //@ts-ignore
-                setErrorMessage(JSON.stringify(error.message))
+                setErrorMessage(error.message)
                 localStorage.removeItem("token");
                 dispatch(authUserFailed())
             }
         }
     };
     return (
-        <div className="column-center">
-            <Logo />
+        <div className="flex-column d-flex justify-content-md-center align-items-center">
+
             <Box header={
-                <div>
-                    <span className="header-title">{Lang.login[lang]}</span>
-                    <span className="header-languge-switch"><LanguageSwitch></LanguageSwitch></span>
-                </div>
+                <nav className="navbar navbar-dark bg-dark" style={{ padding: 10 }}>
+                    <span className="navbar-text">{Lang.login[lang]}</span>
+                    <span className="navbar-text"><LanguageSwitch></LanguageSwitch></span>
+                </nav>
+
             }>
 
-                <form onSubmit={submitForm} className="column-center">
+
+                <form onSubmit={submitForm} className="d-sm-flex flex-column w-100 p-3" style={{ margin: "0 auto" }}>
 
                     {/* EMAIL */}
-                    <InputText
-                        label={Lang.emailLogin[lang]}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setEmail(e.target.value) }}
-                        htmlFor="email"
-                        type="email"
-                        name="email">
-                    </InputText>
+
+                    <div className="input-group mb-3">
+                        <input onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setEmail(e.target.value) }} type="email" className="form-control" placeholder={Lang.emailLogin[lang]} aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                        <div className="input-group-append">
+                            <span className="input-group-text" id="basic-addon2">@{Lang.emailLogin[lang]}</span>
+                        </div>
+                    </div>
 
                     {/* PASSWORD */}
-                    <InputText
-                        label={Lang.passwordLogin[lang]}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setPassword(e.target.value) }}
-                        htmlFor="password"
-                        type="password"
-                        name="password">
-                    </InputText>
 
-                    <span className="login-submit"><input className="submit" type="submit" value={Lang.submitBtnLogin[lang]} /></span>
+                    <div className="input-group mb-3">
+                        <input onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setPassword(e.target.value) }} type="password" className="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                        <div className="input-group-append">
+                            <span className="input-group-text" id="basic-addon2">@{Lang.passwordLogin[lang]}</span>
+                        </div>
+                    </div>
+
+                    <input className="btn btn-dark" type="submit" value={Lang.submitBtnLogin[lang]} />
                 </form>
 
                 {/* ERRORS */}
-                {!errorStatus && <FormErrors error={errorMessage} ></FormErrors>}
+                <p style={{ color: "red", textAlign: "center" }}>
+                    {!errorStatus && <FormErrors error={errorMessage} ></FormErrors>}
+                </p>
+
 
                 {/* FOOTER*/}
-                <p className="login-registration"> {Lang.registrationText[lang]} <Link to="/registration"> {Lang.registration[lang]} </Link></p>
-                <p className="credits"> {Lang.credits[lang]} </p>
+                <footer style={{ textAlign: "center", fontSize: 12 }}>
+                    <p className="login-registration"> {Lang.registrationText[lang]} <Link to="/registration"> {Lang.registration[lang]} </Link><br />
+                        {"\n"}{Lang.credits[lang]} </p>
+                </footer>
+
             </Box>
         </div>
     );

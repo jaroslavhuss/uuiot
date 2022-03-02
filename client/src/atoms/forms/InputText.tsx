@@ -1,5 +1,6 @@
 function InputText(props: any) {
     return (
+
         <div className="form-field">
             <label className="form-field__label" htmlFor={props.htmlFor}>{props?.label}</label>
             <br />
@@ -11,6 +12,8 @@ function InputText(props: any) {
                 type={props.type}
                 name={props.name} />
         </div>
+
+
     )
 }
 

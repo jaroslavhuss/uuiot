@@ -1,8 +1,7 @@
 import { Lang } from "../langauges/Dictionary"
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import validator from "validator";
-
 import { authUserFailed, authUserSuccess } from "../store/reducers/auth";
 import { Link, useNavigate } from "react-router-dom";
 import Box from "../atoms/Box";
@@ -28,6 +27,8 @@ const Register = () => {
     const [errorStatus, setErrorStatus] = useState<boolean>(true);
 
     const dispatch = useDispatch();
+    const authState = useSelector((data: any) => { return data.auth; })
+    useEffect(() => { if (authState.isAuthenticated) { navigate("/dashboard") } }, [authState, navigate]);
     const submitForm = async (e: any) => {
         e.preventDefault();
         if (name === "" && surname === "" && prefferedLanguage === "") {
@@ -61,16 +62,15 @@ const Register = () => {
                         confirmedPassword
                     })
                 })
-                const data: { access_token: TokenInterface, user: UserInterface } = await response.json();
-                if (!data.access_token) throw new Error("Problem with login!");
-                if (!data.user) throw new Error("Could not fetch user's data");
-                localStorage.setItem("token", JSON.stringify(data.access_token));
+                const data: { access_token: string, user: UserInterface, statusCode: number, message: string, error: string } = await response.json();
+                if (data.error) throw new Error(`${data.statusCode} - ${data.error} - ${data.message}`)
+                localStorage.setItem("token", data.access_token);
                 dispatch(authUserSuccess({ token: data.access_token, user: data.user }));
                 navigate("/dashboard")
             } catch (error) {
                 setErrorStatus(false);
                 //@ts-ignore
-                setErrorMessage(JSON.stringify(error.message))
+                setErrorMessage(error.message)
                 dispatch(authUserFailed())
             }
         }
