@@ -101,12 +101,12 @@ export const Lang: ILang = {
     en: "HERE",
   },
   credits: {
-    cs: "Aplikaci SubjectMan, na které se momentálně nacházíte vytvořil tým: Alan Kováč, Jan Vojáček, Jaroslav Huss a Jiří Hejtmánek.",
-    en: "The application on which you are currently using was made by the team of: Alan Kováč, Jan Vojáček, Jaroslav Huss and Jiří Hejtmánek.",
+    cs: "uuClimative 2022",
+    en: "uuClimative 2022",
   },
 
-   //App Bar
-   btnLogOff: {
+  //App Bar
+  btnLogOff: {
     cs: "Odhlásit",
     en: "Log off",
   },
@@ -191,86 +191,85 @@ export const Lang: ILang = {
     en: "Unsubscribe from subject",
   },
   detailTutors: {
-    cs: 'Učitelé',
-    en: 'Tutors'
+    cs: "Učitelé",
+    en: "Tutors",
   },
   detailLinks: {
-    cs: 'Odkazy',
-    en: 'Links'
+    cs: "Odkazy",
+    en: "Links",
   },
   detailTopics: {
-    cs: 'Témata',
-    en: 'Topics'
+    cs: "Témata",
+    en: "Topics",
   },
   detailTopicsDifficulty: {
-    cs: 'Obtížnost',
-    en: 'Difficulty'
+    cs: "Obtížnost",
+    en: "Difficulty",
   },
   detailTutorials: {
-    cs: 'Tutoriály',
-    en: 'Tutorials'
+    cs: "Tutoriály",
+    en: "Tutorials",
   },
   detailTutorial: {
-    cs: 'Tutoriál',
-    en: 'Tutorial'
+    cs: "Tutoriál",
+    en: "Tutorial",
   },
   detailTutorialsDaily: {
-    cs: 'Denní studium',
-    en: 'Daily study'
+    cs: "Denní studium",
+    en: "Daily study",
   },
   detailTutorialsDistant: {
-    cs: 'Distanční studium',
-    en: 'Distant study'
+    cs: "Distanční studium",
+    en: "Distant study",
   },
   detailMaterials: {
-    cs: 'Materiály',
-    en: 'Materials'
+    cs: "Materiály",
+    en: "Materials",
   },
 
   //ADMIN
   adminTutorsSearchField: {
-    cs: 'Vyhledej učitele',
-    en: 'Search tutor'
+    cs: "Vyhledej učitele",
+    en: "Search tutor",
   },
   adminRightTitle: {
-    cs: 'Učitel',
-    en: 'Tutor'
+    cs: "Učitel",
+    en: "Tutor",
   },
   adminRightTitleBefore: {
-    cs: 'Titul před jménem',
-    en: 'Title before name'
+    cs: "Titul před jménem",
+    en: "Title before name",
   },
   adminRightTitleAfter: {
-    cs: 'Titul za jménem',
-    en: 'Title after name'
+    cs: "Titul za jménem",
+    en: "Title after name",
   },
   adminTutorTitle: {
-    cs: 'Učitel',
-    en: 'Tutor'
+    cs: "Učitel",
+    en: "Tutor",
   },
   adminNewBtn: {
-    cs: 'Nový',
-    en: 'New'
+    cs: "Nový",
+    en: "New",
   },
   adminSubmitBtn: {
-    cs: 'Odeslat',
-    en: 'Send'
+    cs: "Odeslat",
+    en: "Send",
   },
   adminDeletetBtn: {
-    cs: 'Smazat',
-    en: 'Delete'
+    cs: "Smazat",
+    en: "Delete",
   },
   adminEdittBtn: {
-    cs: 'Editovat',
-    en: 'Edit'
+    cs: "Editovat",
+    en: "Edit",
   },
   adminFormTypeNew: {
-    cs: 'Nový',
-    en: 'New'
+    cs: "Nový",
+    en: "New",
   },
   adminFormTypeEdit: {
-    cs: 'Editovat',
-    en: 'Edit'
+    cs: "Editovat",
+    en: "Edit",
   },
-  
 };

@@ -10,8 +10,6 @@ import InputText from "../atoms/forms/InputText";
 import FormErrors from "../atoms/forms/FormErrors";
 import LanguageSwitch from "../atoms/forms/LanguageSwitch";
 import FormSelect from "../atoms/forms/FormSelect";
-
-import { TokenInterface } from "../interface/TokenInterface";
 import { UserInterface } from "../interface/UserInterface";
 
 const Register = () => {
@@ -77,92 +75,94 @@ const Register = () => {
     };
 
     return (
-        <div className="column-center">
-            <Logo />
+        <div className="flex-column d-flex justify-content-md-center align-items-center w-100" style={{
+            justifyContent: "center",
+            alignItems: "center",
+            alignSelf: "center"
+        }}>
+            <h1 className="header-title">{Lang.register[lang]}</h1>
+            <nav className="navbar navbar-dark" style={{
+                padding: 10, position: "absolute", top: 0, right: 0, background: "#f9f9f9",
 
-            <Box header={
-                <div>
-                    <span className="header-title">{Lang.register[lang]}</span>
-                    <span className="header-languge-switch"><LanguageSwitch></LanguageSwitch></span>
+                borderRadius: 12,
+            }}>
+                <span className="navbar-text"><LanguageSwitch></LanguageSwitch></span>
+            </nav>
+
+            <form onSubmit={submitForm} className="d-sm-flex flex-column w-100 p-3" autoComplete="off" style={{
+                margin: "0 auto",
+                background: "#f9f9f9",
+                padding: 10,
+                borderRadius: 12,
+                maxWidth: 600,
+            }}>
+
+                {/* NAME */}
+
+                <div className="input-group mb-3">
+                    <input value={name} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setName(e.target.value) }} type="text" className="form-control" placeholder={Lang.name[lang]} aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                    <div className="input-group-append">
+                        <span className="input-group-text" id="basic-addon2">{Lang.name[lang]}</span>
+                    </div>
                 </div>
-            }>
 
-                <form onSubmit={submitForm} className="column-center" autoComplete="off" >
+                {/* SURNAME */}
 
-                    {/* NAME */}
-                    <InputText
-                        label={Lang.name[lang]}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setName(e.target.value) }}
-                        htmlFor="name"
-                        type="text"
-                        name="name"
-                        value={name}>
-                    </InputText>
-
-                    {/* SURNAME */}
-                    <InputText
-                        label={Lang.surname[lang]}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setSurname(e.target.value) }}
-                        htmlFor="surname"
-                        type="text"
-                        name="surname"
-                        value={surname}>
-                    </InputText>
-
-                    <div className="register-selects">
-
-                        {/* LANGUAGE */}
-                        <FormSelect
-                            label={Lang.prefferdLanguage[lang]}
-                            htmlFor="Language"
-                            onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setPrefferedLanguage(e.target.value) }}
-                            options={["cz", "en"]}>
-                        </FormSelect>
+                <div className="input-group mb-3">
+                    <input value={surname} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setSurname(e.target.value) }} type="text" className="form-control" placeholder={Lang.surname[lang]} aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                    <div className="input-group-append">
+                        <span className="input-group-text" id="basic-addon2">{Lang.surname[lang]}</span>
                     </div>
+                </div>
 
-                    {/* EMAIL */}
-                    <InputText
-                        label={Lang.emailRegister[lang]}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setEmail(e.target.value) }}
-                        htmlFor="email"
-                        type="email"
-                        name="email"
-                        value={email}>
-                    </InputText>
+                <div className="register-selects">
 
-                    {/* PASSWORD */}
-                    <InputText
-                        label={Lang.passwordRegister[lang]}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setPassword(e.target.value) }}
-                        htmlFor="password"
-                        type="password"
-                        name="password"
-                        value={password}>
-                    </InputText>
+                    {/* LANGUAGE */}
+                    <FormSelect
+                        label={Lang.prefferdLanguage[lang]}
+                        htmlFor="Language"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setPrefferedLanguage(e.target.value) }}
+                        options={["cz", "en"]}>
+                    </FormSelect>
+                </div>
 
-                    {/* PASSWORD */}
-                    <InputText
-                        label={Lang.passwordConfirmRegister[lang]}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setConfirmedPassword(e.target.value) }}
-                        htmlFor="password-cofirm"
-                        type="password"
-                        name="password-cofirm"
-                        value={confirmedPassword}>
-                    </InputText>
+                {/* EMAIL */}
 
-                    {/* FORM CONTROL */}
-                    <div className="register-form-control">
-
-                        <input className="submit" type="submit" value={Lang.submitBtnRegister[lang]} />
+                <div className="input-group mb-3">
+                    <input value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setEmail(e.target.value) }} type="email" className="form-control" placeholder={Lang.emailRegister[lang]} aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                    <div className="input-group-append">
+                        <span className="input-group-text" id="basic-addon2">{Lang.emailRegister[lang]}</span>
                     </div>
-                </form>
-                <Link to="/login"><button className="button-custom button-custom-big">{Lang.backBtnRegister[lang]}</button></Link>
-                {/* ERRORS */}
+                </div>
+                {/* PASSWORD */}
+                <div className="input-group mb-3">
+                    <input value={password} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setPassword(e.target.value) }} type="password" className="form-control" placeholder={Lang.passwordRegister[lang]} aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                    <div className="input-group-append">
+                        <span className="input-group-text" id="basic-addon2">{Lang.passwordRegister[lang]}</span>
+                    </div>
+                </div>
+                {/* PASSWORD */}
+
+                <div className="input-group mb-3">
+                    <input value={confirmedPassword} onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setConfirmedPassword(e.target.value) }} type="password" className="form-control" placeholder={Lang.passwordConfirmRegister[lang]} aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                    <div className="input-group-append">
+                        <span className="input-group-text" id="basic-addon2">{Lang.passwordConfirmRegister[lang]}</span>
+                    </div>
+                </div>
+                {/* FORM CONTROL */}
+                <div className="register-form-control">
+
+                    <input className="btn btn-dark" type="submit" value={Lang.submitBtnRegister[lang]} />
+                </div>
                 {!errorStatus && <FormErrors error={errorMessage} ></FormErrors>}
+            </form>
+            <Link to="/login"><button className="btn btn-danger" type="submit">{Lang.backBtnRegister[lang]}</button></Link>
+            {/* ERRORS */}
 
-                {/* FOOTER */}
-                <p className="credits"> {Lang.credits[lang]} </p>
-            </Box>
+
+            {/* FOOTER */}
+            <p className="credits"> {Lang.credits[lang]} </p>
+
         </div>
     );
 };

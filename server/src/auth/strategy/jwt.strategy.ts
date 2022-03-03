@@ -56,7 +56,6 @@ export class JwtStrategyAdmin extends PassportStrategy(Strategy, 'jwtadmin') {
 
   async validate(payload: payLoadInterface) {
     const user = await this.userModel.findById({ _id: payload.sub });
-    console.log(user);
     if (!user) throw new ForbiddenException('You must be logged in!');
     if (!user.isUserApproved)
       throw new ForbiddenException(

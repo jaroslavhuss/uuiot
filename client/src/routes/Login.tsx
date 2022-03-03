@@ -54,9 +54,7 @@ const Login = () => {
                     method: "post",
                     body: JSON.stringify({ email, password })
                 })
-
                 const data: { access_token: string, user: UserInterface, message: string } = await response.json();
-                console.log(data)
                 if (!data.access_token) throw new Error(data.message);
                 if (!data.user) throw new Error("Could not fetch user's data")
                 if (!data.user.isUserApproved) throw new Error("User was not verified yet!")
@@ -71,53 +69,59 @@ const Login = () => {
         }
     };
     return (
-        <div className="flex-column d-flex justify-content-md-center align-items-center">
+        <div className="flex-column d-flex justify-content-md-center align-items-center w-100" style={{
+            justifyContent: "center",
+            alignItems: "center",
+            alignSelf: "center"
+        }}>
+            <nav className="navbar navbar-dark" style={{
+                padding: 10, position: "absolute", top: 0, right: 0, background: "#f9f9f9",
 
-            <Box header={
-                <nav className="navbar navbar-dark bg-dark" style={{ padding: 10 }}>
-                    <span className="navbar-text">{Lang.login[lang]}</span>
-                    <span className="navbar-text"><LanguageSwitch></LanguageSwitch></span>
-                </nav>
+                borderRadius: 12,
+            }}>
+                <span className="navbar-text"><LanguageSwitch></LanguageSwitch></span>
+            </nav>
+            <h1 className="navbar-text">{Lang.login[lang]}</h1>
+            <form onSubmit={submitForm} className="d-sm-flex flex-column w-100 p-3" style={{
+                margin: "0 auto",
+                background: "#f9f9f9",
+                padding: 10,
+                borderRadius: 12,
+                maxWidth: 600,
+            }}>
 
-            }>
+                {/* EMAIL */}
 
-
-                <form onSubmit={submitForm} className="d-sm-flex flex-column w-100 p-3" style={{ margin: "0 auto" }}>
-
-                    {/* EMAIL */}
-
-                    <div className="input-group mb-3">
-                        <input onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setEmail(e.target.value) }} type="email" className="form-control" placeholder={Lang.emailLogin[lang]} aria-label="Recipient's username" aria-describedby="basic-addon2" />
-                        <div className="input-group-append">
-                            <span className="input-group-text" id="basic-addon2">@{Lang.emailLogin[lang]}</span>
-                        </div>
+                <div className="input-group mb-3">
+                    <input onChange={(e: React.ChangeEvent<HTMLInputElement>) => { setEmail(e.target.value) }} type="email" className="form-control" placeholder={Lang.emailLogin[lang]} aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                    <div className="input-group-append">
+                        <span className="input-group-text" id="basic-addon2">@{Lang.emailLogin[lang]}</span>
                     </div>
+                </div>
 
-                    {/* PASSWORD */}
+                {/* PASSWORD */}
 
-                    <div className="input-group mb-3">
-                        <input onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setPassword(e.target.value) }} type="password" className="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2" />
-                        <div className="input-group-append">
-                            <span className="input-group-text" id="basic-addon2">@{Lang.passwordLogin[lang]}</span>
-                        </div>
+                <div className="input-group mb-3">
+                    <input onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setPassword(e.target.value) }} type="password" className="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                    <div className="input-group-append">
+                        <span className="input-group-text" id="basic-addon2">@{Lang.passwordLogin[lang]}</span>
                     </div>
+                </div>
 
-                    <input className="btn btn-dark" type="submit" value={Lang.submitBtnLogin[lang]} />
-                </form>
+                <input className="btn btn-dark" type="submit" value={Lang.submitBtnLogin[lang]} />
+            </form>
 
-                {/* ERRORS */}
-                <p style={{ color: "red", textAlign: "center" }}>
-                    {!errorStatus && <FormErrors error={errorMessage} ></FormErrors>}
-                </p>
+            {/* ERRORS */}
+            <p style={{ color: "red", textAlign: "center" }}>
+                {!errorStatus && <FormErrors error={errorMessage} ></FormErrors>}
+            </p>
 
 
-                {/* FOOTER*/}
-                <footer style={{ textAlign: "center", fontSize: 12 }}>
-                    <p className="login-registration"> {Lang.registrationText[lang]} <Link to="/registration"> {Lang.registration[lang]} </Link><br />
-                        {"\n"}{Lang.credits[lang]} </p>
-                </footer>
-
-            </Box>
+            {/* FOOTER*/}
+            <footer style={{ textAlign: "center", fontSize: 12 }}>
+                <p className="login-registration"> {Lang.registrationText[lang]} <Link to="/registration"> {Lang.registration[lang]} </Link><br />
+                    {"\n"}{Lang.credits[lang]} </p>
+            </footer>
         </div>
     );
 };
