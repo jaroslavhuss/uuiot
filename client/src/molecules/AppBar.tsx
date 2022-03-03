@@ -14,39 +14,19 @@ function AppBar() {
     return (
         <div className="app-bar">
 
-            <span className="app-bar__section-left">
-                <Logo useSmall={true} />
+            {isAdmin === "iotadmin" &&
+                <Link className="btn btn-sm btn-outline-secondary btn-warning" to="/admin-panel">Go to admin panel</Link>
+            }
+            <br />
+            <br />
+            <UserProfile />
+            <span className="switch-bar" style={{
+                padding: 10, position: "absolute", top: 0, right: 0, background: "#f9f9f9",
+                borderRadius: 12,
+            }}>
+                <LanguageSwitch />
             </span>
 
-            <span className="app-bar__section-right">
-
-                <span>
-                    <UserProfile />
-                </span>
-
-                <span className="padder" />
-
-                <span className="switch-bar">
-                    <LanguageSwitch />
-                </span>
-
-                <span className="padder" />
-
-                {auth &&
-                    <button className="button-custom button-custom-small" onClick={() => { dispatch(authUserFailed()); localStorage.clear() }}>
-                        {Lang.btnLogOff[lang]}
-                    </button>
-                }
-                {isAdmin === "iotadmin" &&
-                    <>
-                        <span className="padder" />
-                        <span className="user-pill">
-                            <Link style={{ color: "red", textDecoration: "none", fontWeight: "bold" }} to="/admin-panel">Admin</Link>
-                        </span>
-                    </>
-                }
-
-            </span>
         </div>
     )
 }

@@ -59,9 +59,6 @@ const AdminPanel = () => {
     }
     return (
         <AdminContainer>
-            <h1 style={{ margin: 10 }}>
-                Admin: <span style={{ color: "red" }}>{user.name} {user.surname}</span>
-            </h1>
             <div className="listOfUsers" style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
                 {
                     users.map((userRegular: UserInterface, index) => (

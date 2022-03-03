@@ -16,6 +16,7 @@ const StudentsDashboard = () => {
     return <>
         {authState.isAuthenticated &&
             <div>
+                <br />
                 <AppBar />
                 <h2 className="page-title">{Lang.dashboardTitle[lang]}</h2>
                 <div className="dashborad-wrapper">
