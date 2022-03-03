@@ -1,17 +1,24 @@
-import { Link, useNavigate } from "react-router-dom"
-
+import { Link } from "react-router-dom"
+import { authUserFailed } from "../store/reducers/auth";
+import { useDispatch } from "react-redux";
 
 const AdminMenu = () => {
-    const navigate = useNavigate();
+    const dispatch = useDispatch();
     return (
-        <div className='row-admin-panel'>
-            <Link className="menu-btn" to="/">IOT Dashboard</Link>
-            <span className="menu-btn-logoff" onClick={() => {
-                localStorage.clear();
-                navigate("/")
-            }}>Log-out</span>
+        <nav className="navbar navbar-expand-sm">
 
-        </div>
+            <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul className="navbar-nav">
+                    <li className="nav-item btn btn-sm btn-outline-secondary">
+                        <Link className="nav-link" to="/">Back to IOT dashboard</Link>
+                    </li>
+
+                </ul>
+            </div>
+        </nav>
     );
 };
 

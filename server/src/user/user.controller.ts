@@ -34,4 +34,11 @@ export class UserController {
     const user = await this.user.updateUser(id, body);
     return user;
   }
+
+  @UseGuards(AuthGuard('jwtadmin'))
+  @Get('all')
+  async getAllUsers() {
+    const users = await this.user.getAllUsers();
+    return users;
+  }
 }

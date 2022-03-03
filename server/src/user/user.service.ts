@@ -19,4 +19,9 @@ export class UserService {
     );
     return user;
   }
+
+  async getAllUsers() {
+    const users = await this.userModel.find({});
+    return users;
+  }
 }
