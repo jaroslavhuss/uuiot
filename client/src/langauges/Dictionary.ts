@@ -272,4 +272,8 @@ export const Lang: ILang = {
     cs: "Editovat",
     en: "Edit",
   },
+  lastLoggedIn: {
+    cs: "Naposledy přihlášený",
+    en: "Last Logged In",
+  },
 };
