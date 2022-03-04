@@ -10,8 +10,8 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
 import { getUser } from 'src/auth/decorators';
-import { User } from '@prisma/client';
-
+import { User } from '../schemas/user.schema';
+import { UserUpdateDto } from './dto';
 @Controller('users')
 export class UserController {
   constructor(private user: UserService) {}
@@ -30,7 +30,7 @@ export class UserController {
 
   @UseGuards(AuthGuard('jwtadmin'))
   @Patch('update/:id')
-  async updateUser(@Body() body: User, @Param('id') id: string) {
+  async updateUser(@Body() body: UserUpdateDto, @Param('id') id: string) {
     const user = await this.user.updateUser(id, body);
     return user;
   }

@@ -56,6 +56,11 @@ export class AuthService {
       dto.password,
     );
     if (!passwordMatch) throw new ForbiddenException('Wrong password');
+    await this.userModel.findOneAndUpdate(
+      { _id: user.id },
+      { lastLoggedIn: new Date() },
+      { new: true },
+    );
     return this.signToken(user.id, user.email, user.authLevel, user);
   }
 
