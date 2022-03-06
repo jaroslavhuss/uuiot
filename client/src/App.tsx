@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
  */
 import Admin from "./utils/ProtectedAdminRoute"
 import AdminPanel from "./routes/AdminRoutes/AdminDashboard";
+import AdminCreateGateway from "./routes/AdminRoutes/AdminCreateGateway";
+
 import Register from "./routes/Register";
 import Login from "./routes/Login";
 import StudentsDashboard from "./routes/StudentsDashboard";
@@ -43,6 +45,7 @@ const App = () => {
           }
           <Route element={<Admin />}>
             <Route path="/admin-panel" element={<AdminPanel />} />
+            <Route path="/admin-gateway" element={<AdminCreateGateway />} />
           </Route>
           {
             /**

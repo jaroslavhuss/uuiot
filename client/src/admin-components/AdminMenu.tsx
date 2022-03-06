@@ -12,8 +12,14 @@ const AdminMenu = () => {
             </button>
             <div className="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul className="navbar-nav">
-                    <li className="nav-item btn btn-sm btn-outline-secondary">
+                    <li className="nav-item btn btn-sm btn-outline-secondary" style={{ marginRight: 5 }}>
                         <Link className="nav-link" to="/">Back to IOT dashboard</Link>
+                    </li>
+                    <li className="nav-item btn btn-sm btn-outline-secondary" style={{ marginRight: 5 }}>
+                        <Link className="nav-link" to="/admin-panel">Manage Users</Link>
+                    </li>
+                    <li className="nav-item btn btn-sm btn-outline-secondary" style={{ marginRight: 5 }}>
+                        <Link className="nav-link" to="/admin-gateway">Manage GateWays</Link>
                     </li>
 
                 </ul>
