@@ -7,12 +7,18 @@ export type GatewayDocument = Gateway & Document;
 export class Gateway {
   @Prop({ default: new Date() })
   createdAt: Date;
+
   @Prop()
-  gatewayName: string;
+  name: string;
+
   @Prop()
-  temp: number;
+  password: string;
+
   @Prop()
-  hum: number;
+  description: string;
+
+  @Prop()
+  creator: string;
 }
 
 export const GatewaySchema = SchemaFactory.createForClass(Gateway);
