@@ -4,7 +4,8 @@ import { UserInterface } from "../../interface/UserInterface";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { authUserFailed } from "../../store/reducers/auth";
-
+import { setError } from "../../store/reducers/errorReducer";
+import { GLOBAL_URL } from "../../GLOBAL_URL";
 const AdminPanel = () => {
     const dispatch = useDispatch();
     let user: UserInterface = useSelector((data: any) => {
@@ -15,12 +16,13 @@ const AdminPanel = () => {
 
     useEffect(() => {
         getAllUsers();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [listenForChange]);
     //Fetch all users - Admin required
     const getAllUsers = async () => {
         try {
             const token: string | null = localStorage.getItem("token");
-            const response: Response = await fetch("http://localhost:5001/users/all", {
+            const response: Response = await fetch(GLOBAL_URL + "/users/all", {
                 method: "get",
                 headers: {
                     "Content-type": "application/json",
@@ -34,14 +36,16 @@ const AdminPanel = () => {
             setUsers(data);
 
         } catch (error: any) {
-            console.log(error)
+            if (error) {
+                dispatch(setError(error.message));
+            }
         }
     }
 
     const updateUser = async (index: number, action: boolean) => {
         const token: string | null = localStorage.getItem("token");
         try {
-            const response: Response = await fetch(`http://localhost:5001/users/update/${users[index]._id}`, {
+            const response: Response = await fetch(GLOBAL_URL + `/users/update/${users[index]._id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-type": "application/json",
@@ -52,11 +56,34 @@ const AdminPanel = () => {
                 })
             })
             const data: any = await response.json();
+            if (!data) throw new Error("User could not be updated");
             setListenForChange(!listenForChange);
-        } catch (error) {
-            console.log(error);
+        } catch (error: any) {
+            dispatch(setError([error]))
         }
     }
+    const deleteUser = async (index: number) => {
+        const conf = window.confirm(`Do you really want to delete ${users[index].email}`);
+        if (conf) {
+            const token: string | null = localStorage.getItem("token");
+            try {
+                const response: Response = await fetch(GLOBAL_URL + `/users/delete/${users[index]._id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                const data: any = await response.json();
+                if (data.error) throw new Error(data.message);
+                setListenForChange(!listenForChange);
+            } catch (error: any) {
+                dispatch(setError([error]))
+            }
+        }
+    }
+
+
     return (
         <AdminContainer>
             <div className="listOfUsers" style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
@@ -86,19 +113,22 @@ const AdminPanel = () => {
                                         </>
                                     }
                                     {
-                                        user.email == userRegular.email &&
+                                        user.email === userRegular.email &&
                                         <div>
-                                            <p>You can not modify your own profile! </p>
+
                                             <ul className="list-group list-group-flush">
                                                 <li className="list-group-item" onClick={() => {
                                                     dispatch(authUserFailed())
                                                 }}>
-                                                    <a style={{ color: "red" }} className="nav-link btn btn-sm btn-outline-secondary" href="#">Log-out</a>
+                                                    <span style={{ color: "red" }} className="nav-link btn btn-sm btn-outline-secondary">Log-out</span>
                                                 </li>
                                             </ul>
 
                                         </div>
                                     }
+                                    {user.email !== userRegular.email && <div className="col-sm-4">
+                                        <div className="btn btn-primary btn-danger" onClick={() => { deleteUser(index) }}>Delete</div>
+                                    </div>}
 
                                 </div>
                             </div>

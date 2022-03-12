@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
  * Admin components
  */
 import Admin from "./utils/ProtectedAdminRoute"
-import AdminPanel from "./routes/AdminRoutes/AdminDashboard";
-import AdminCreateGateway from "./routes/AdminRoutes/AdminCreateGateway";
+import AdminPanel from "./routes/AdminRoutes/ManageUsers";
+import AdminCreateGateway from "./routes/AdminRoutes/ManageGateways";
 
 import Register from "./routes/Register";
 import Login from "./routes/Login";
@@ -19,14 +19,12 @@ import BG from "./assets/sky_bg.jpg";
 const App = () => {
   const data = useSelector((data: {
     error: {
-      alerts: string,
+      alerts: [],
       show: boolean
     }
   }) => {
     return data.error;
   })
-
-
   GlobalWatcher();
 
 
