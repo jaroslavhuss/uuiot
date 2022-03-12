@@ -1,7 +1,8 @@
 import { useDispatch } from "react-redux";
 import { cleanError } from "../store/reducers/errorReducer"
-const Error = ({ errorMessage }: { errorMessage: string }) => {
+const Error = ({ errorMessage }: { errorMessage: [] }) => {
     const dispatch = useDispatch();
+    console.log(errorMessage)
     return (
         <div style={{
             display: "flex",
@@ -17,7 +18,10 @@ const Error = ({ errorMessage }: { errorMessage: string }) => {
                 dispatch(cleanError());
             }}
         >
-            <p style={{ color: "red", padding: 40, background: "white", borderRadius: 12 }}>{errorMessage}</p>
+            {
+                //   errorMessage.map((err, index) => <p key={index} style={{ color: "red", padding: 40, background: "white", borderRadius: 12 }}>{err}</p>)
+            }
+
         </div>
     );
 };

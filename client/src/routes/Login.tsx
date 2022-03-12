@@ -104,7 +104,7 @@ const Login = () => {
                 <div className="input-group mb-3">
                     <input onChange={(e: React.ChangeEvent<HTMLInputElement>): void => { setPassword(e.target.value) }} type="password" className="form-control" aria-label="Recipient's username" aria-describedby="basic-addon2" />
                     <div className="input-group-append">
-                        <span className="input-group-text" id="basic-addon2">@{Lang.passwordLogin[lang]}</span>
+                        <span className="input-group-text" id="basic-addon2">{Lang.passwordLogin[lang]}</span>
                     </div>
                 </div>
 

@@ -1,8 +1,10 @@
 
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { UserInterface } from "../interface/UserInterface";
 import { Lang } from "../langauges/Dictionary"
 import { authUserFailed } from "../store/reducers/auth";
+
 function UserProfile() {
     const lang = useSelector((data: any) => { return data.language.language })
     const authState = useSelector((data: any) => { return data.auth; })
@@ -11,6 +13,7 @@ function UserProfile() {
     const wholeUser = useSelector((data: { auth: { user: UserInterface } }) => {
         return data.auth.user;
     })
+    const navigate = useNavigate();
     return (
         <span className="card">
             <div className="card">
@@ -21,7 +24,7 @@ function UserProfile() {
                     <p className="card-text">{Lang.lastLoggedIn[lang]} : {new Date(wholeUser.lastLoggedIn).toLocaleString()}</p>
 
                     {auth &&
-                        <button className="btn btn-sm  btn-danger" onClick={() => { dispatch(authUserFailed()); localStorage.clear() }}>
+                        <button className="btn btn-sm  btn-danger" onClick={() => { dispatch(authUserFailed()); navigate("/login") }}>
                             {Lang.btnLogOff[lang]}
                         </button>
                     }

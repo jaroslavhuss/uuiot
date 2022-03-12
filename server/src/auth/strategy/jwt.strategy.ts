@@ -5,6 +5,7 @@ import { ConfigService } from '@nestjs/config';
 
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserDocument } from 'src/schemas/user.schema';
+import { Gateway, GatewayDocument } from 'src/schemas';
 import { Model } from 'mongoose';
 
 interface payLoadInterface {
@@ -65,5 +66,28 @@ export class JwtStrategyAdmin extends PassportStrategy(Strategy, 'jwtadmin') {
       throw new ForbiddenException('Not enough privileges!');
     delete user.password;
     return { user, payload };
+  }
+}
+
+@Injectable()
+export class JwtStrategyGateway extends PassportStrategy(
+  Strategy,
+  'jwtgateway',
+) {
+  constructor(
+    config: ConfigService,
+    @InjectModel(Gateway.name) private gatewayModel: Model<GatewayDocument>,
+  ) {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: config.get('JWT_SECRET'),
+    });
+  }
+
+  async validate(payload: { name: string }) {
+    const gateway = await this.gatewayModel.findOne({ name: payload.name });
+    if (!gateway) throw new ForbiddenException('You must be logged in!');
+    return { gateway };
   }
 }

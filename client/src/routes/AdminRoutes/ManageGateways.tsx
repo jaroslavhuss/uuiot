@@ -7,7 +7,8 @@ interface GateWayCreateInterface {
     confirmedPassword?: string;
     description: string;
     creator?: string
-    createdAt?: any
+    createdAt?: any,
+    _id?: string
 }
 const AdminCreateGateway = () => {
     const [listOfGateways, setListOfGateways] = useState<GateWayCreateInterface[]>([])
@@ -84,6 +85,27 @@ const AdminCreateGateway = () => {
         setListOfGateways(data);
     }
 
+    const deleteGateWay = async (index: number) => {
+        const conf = window.confirm(`Do you really want to delete ${listOfGateways[index].name}`);
+        if (conf) {
+            const token: string | null = localStorage.getItem("token");
+            try {
+                const response: Response = await fetch(GLOBAL_URL + `/gateway/delete/${listOfGateways[index]._id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                })
+                const data: any = await response.json();
+                if (data.error) throw new Error(data.message);
+                setFetchChange(!fetchChange);
+            } catch (error: any) {
+                console.log(error);
+                // dispatch(setError([error]))
+            }
+        }
+    }
     useEffect(() => {
         getAllGateways()
     }, [fetchChange]);
@@ -132,8 +154,8 @@ const AdminCreateGateway = () => {
                             <h5 className="card-header">{gateway.name}</h5>
                             <p className="card-text"> <strong>Description: </strong> {gateway.description}</p>
                             <p className="card-text"><strong>Created by:</strong>{gateway.creator} <span style={{ fontSize: 10 }}>{new Date(gateway.createdAt).toDateString()}</span></p>
-                            <p className="card-text"><strong>Status: </strong> <span style={{ color: "green" }}>Active</span></p>
-
+                            <p className="card-text"><strong>Status: </strong> <span style={{ color: "green" }}>Online</span></p>
+                            <p className="btn btn-danger" onClick={() => { deleteGateWay(index) }}>Delete</p>
                         </div>
                     </div>
                 ))}

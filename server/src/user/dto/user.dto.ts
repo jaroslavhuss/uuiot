@@ -36,3 +36,8 @@ export class UserUpdateDto {
   @IsBoolean()
   isUserApproved: boolean;
 }
+
+export class UserDeleteDto {
+  @IsString()
+  id: string;
+}

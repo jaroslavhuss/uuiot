@@ -27,4 +27,9 @@ export class GatewayService {
     const gateways = await this.gatewayModel.find({});
     return gateways;
   }
+
+  async deleteGateway(id: string) {
+    const user = await this.gatewayModel.findByIdAndDelete(id);
+    return user;
+  }
 }
