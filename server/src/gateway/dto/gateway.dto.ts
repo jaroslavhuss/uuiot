@@ -6,6 +6,7 @@ import {
   MaxLength,
   Matches,
   IsOptional,
+  IsMongoId,
 } from 'class-validator';
 
 export class GatewaySaveDto {
@@ -56,4 +57,9 @@ export class GatewayLogInDto {
       'Password is too weak - it has to contain at least one Capital Letter and one number.',
   })
   password: string;
+}
+
+export class GatewayID {
+  @IsMongoId()
+  id: string;
 }

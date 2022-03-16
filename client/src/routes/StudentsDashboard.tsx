@@ -4,13 +4,25 @@ import { Lang } from "../langauges/Dictionary"
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GLOBAL_URL } from '../GLOBAL_URL'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+
 interface GateWayCreateInterface {
     name: string;
     password?: string;
     confirmedPassword?: string;
     description: string;
     creator?: string
-    createdAt?: any
+    createdAt?: any,
+    _id?: string
+}
+
+interface GWDataInterface {
+    date: string
+    gw: string
+    teplota: number
+    vlhkost: number
+    __v: number
+    _id: number
 }
 
 const StudentsDashboard = () => {
@@ -18,6 +30,7 @@ const StudentsDashboard = () => {
     const authState = useSelector((data: any) => { return data.auth })
     const lang = useSelector((data: any) => { return data.language.language })
     const [listOfGateways, setListOfGateways] = useState<GateWayCreateInterface[]>([])
+    const [gwsdata, setGwsdata] = useState<GWDataInterface[]>([])
     const [fetchChange, setFetchChange] = useState<boolean>(false)
 
 
@@ -41,6 +54,26 @@ const StudentsDashboard = () => {
         }
         getAllGateways();
     }, [fetchChange])
+
+
+    const getDataFromGW = async (id: string) => {
+        try {
+            const token: string | null = localStorage.getItem("token");
+            const response: Response = await fetch(`${GLOBAL_URL}/gateway/data/${id}`, {
+                method: "GET",
+                headers: {
+                    "Content-type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                }
+            })
+            const data: GWDataInterface[] = await response.json();
+            setGwsdata(data);
+        } catch (error) {
+            setGwsdata([]);
+            console.log(error)
+        }
+
+    }
     return <>
         {authState.isAuthenticated &&
             <div>
@@ -49,14 +82,58 @@ const StudentsDashboard = () => {
                 <h2 className="page-title">{Lang.dashboardTitle[lang]}</h2>
                 <div className="dashborad-wrapper">
                     <hr />
-                    <select className="form-select" aria-label="Default select example">
+                    <select onChange={(e: any) => {
+                        getDataFromGW(e.target.value);
+                    }} className="form-select" aria-label="Default select example">
                         <option value="---">---</option>
                         {listOfGateways.map((gateway: GateWayCreateInterface, index) => (
-
-                            <option key={index} value={gateway.name}>{gateway.name}</option>
-
+                            <option key={index} value={gateway._id}>{gateway.name}</option>
                         ))}
                     </select>
+                </div>
+                <div className="gwData">
+                    <div style={{ width: '100%' }}>
+                        <h3>Teplota</h3>
+                        <ResponsiveContainer width="100%" height={200}>
+                            <LineChart
+                                width={500}
+                                height={200}
+                                data={gwsdata}
+                                margin={{
+                                    top: 10,
+                                    right: 30,
+                                    left: 0,
+                                    bottom: 0,
+                                }}
+                            >
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="date" style={{ fontSize: 8 }} />
+                                <YAxis />
+                                <Tooltip />
+                                <Line connectNulls type="monotone" dataKey="teplota" stroke="#8884d8" fill="#8884d8" />
+                            </LineChart>
+                        </ResponsiveContainer>
+                        <h3>Vlhkost</h3>
+                        <ResponsiveContainer width="100%" height={200}>
+                            <LineChart
+                                width={500}
+                                height={200}
+                                data={gwsdata}
+                                margin={{
+                                    top: 10,
+                                    right: 30,
+                                    left: 0,
+                                    bottom: 0,
+                                }}
+                            >
+                                <CartesianGrid strokeDasharray="3 3" />
+                                <XAxis dataKey="date" style={{ fontSize: 8 }} />
+                                <YAxis />
+                                <Tooltip />
+                                <Line connectNulls type="monotone" dataKey="vlhkost" stroke="#8884d8" fill="#8884d8" />
+                            </LineChart>
+                        </ResponsiveContainer>
+                    </div>
                 </div>
             </div>
         }

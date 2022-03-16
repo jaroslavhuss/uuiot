@@ -6,7 +6,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { GatewayModule } from './gateway/gateway.module';
 
 //.env does not load here - but this string is no security harm
-const STAGE: 'development' | 'production' = 'development';
+const STAGE: 'development' | 'production' = 'production';
 
 @Module({
   imports: [
@@ -18,6 +18,7 @@ const STAGE: 'development' | 'production' = 'development';
           'DATABASE_LOCAL_URL' | 'DATABASE_PRODUCTION_URL'
         >(
           //Here u can change that - enum type is mentioned in STAGE variable btw.
+          //@ts-ignore
           STAGE === 'development'
             ? 'DATABASE_LOCAL_URL'
             : 'DATABASE_PRODUCTION_URL',

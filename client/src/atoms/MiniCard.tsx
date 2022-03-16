@@ -1,6 +1,5 @@
 import { ReactChild, ReactFragment, ReactPortal, useState } from "react";
 
-import { Icon } from '@iconify/react';
 
 function MiniCard(props: { dropDownContent: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; name: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined; }) {
 
@@ -9,9 +8,7 @@ function MiniCard(props: { dropDownContent: boolean | ReactChild | ReactFragment
     return (
         <div className="mini-card">
             <div className="dropdown" onClick={() => setShow(!show)} >
-                <span className="mini-card__actions">
-                    <Icon inline={true} icon="mdi:dots-vertical" />
-                </span>
+
             </div>
 
             <div className={show && props.dropDownContent! ? "mini-card__content-opened" : "mini-card__content"} > {props.name} </div>
