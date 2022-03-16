@@ -6,9 +6,7 @@ import { authUserSuccess, authUserFailed } from "../store/reducers/auth";
 import { useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-import Box from "../atoms/Box";
-import Logo from "../atoms/Logo"
-import InputText from "../atoms/forms/InputText";
+
 import FormErrors from "../atoms/forms/FormErrors";
 import LanguageSwitch from "../atoms/forms/LanguageSwitch";
 import { UserInterface } from "../interface/UserInterface";

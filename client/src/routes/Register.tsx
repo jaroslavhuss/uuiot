@@ -4,9 +4,6 @@ import { useState, useEffect } from "react";
 import validator from "validator";
 import { authUserFailed, authUserSuccess } from "../store/reducers/auth";
 import { Link, useNavigate } from "react-router-dom";
-import Box from "../atoms/Box";
-import Logo from "../atoms/Logo"
-import InputText from "../atoms/forms/InputText";
 import FormErrors from "../atoms/forms/FormErrors";
 import LanguageSwitch from "../atoms/forms/LanguageSwitch";
 import FormSelect from "../atoms/forms/FormSelect";
@@ -26,7 +23,12 @@ const Register = () => {
 
     const dispatch = useDispatch();
     const authState = useSelector((data: any) => { return data.auth; })
-    useEffect(() => { if (authState.isAuthenticated) { navigate("/dashboard") } }, [authState, navigate]);
+
+
+    useEffect(() => {
+        console.log(authState)
+        if (authState.isAuthenticated) { navigate("/login") }
+    }, [authState, navigate]);
     const submitForm = async (e: any) => {
         e.preventDefault();
         if (name === "" && surname === "" && prefferedLanguage === "") {
@@ -62,6 +64,10 @@ const Register = () => {
                 })
                 const data: { access_token: string, user: UserInterface, statusCode: number, message: string, error: string } = await response.json();
                 if (data.error) throw new Error(`${data.statusCode} - ${data.error} - ${data.message}`)
+                if (!data.user.isUserApproved) {
+                    navigate("/login")
+                    throw new Error("User was not verified yet!")
+                }
                 localStorage.setItem("token", data.access_token);
                 dispatch(authUserSuccess({ token: data.access_token, user: data.user }));
                 navigate("/dashboard")

@@ -1,15 +1,9 @@
-import { useSelector, useDispatch } from "react-redux";
-import { authUserFailed } from "../store/reducers/auth";
-import { Lang } from "../langauges/Dictionary"
+import { useSelector } from "react-redux";
 import LanguageSwitch from "../atoms/forms/LanguageSwitch";
-import Logo from "../atoms/Logo";
 import UserProfile from "../atoms/UserProfile";
 import { Link } from "react-router-dom"
 
 function AppBar() {
-    const dispatch = useDispatch();
-    const auth = useSelector((data: any) => { return data.auth.isAuthenticated })
-    const lang = useSelector((data: any) => { return data.language.language })
     const isAdmin = useSelector((data: any) => { return data.auth.user.authLevel })
     return (
         <div className="app-bar">
