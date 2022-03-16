@@ -19,7 +19,6 @@ export class AuthController {
 
   @Post('/gateway-signin')
   gatewaySignIn(@Body() dto: GatewayLogInDto) {
-    console.log(dto);
     return this.authService.gatewaySignIn(dto);
   }
 }
