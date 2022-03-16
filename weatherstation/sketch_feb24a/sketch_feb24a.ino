@@ -8,7 +8,7 @@ float temp;
 
 // Get rid of fakin delay
 unsigned long previousMillis = 0;
-const long interval = 2000;
+const long interval = 60000; // A fakin minute
 
 void setup()
 {
