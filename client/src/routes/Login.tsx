@@ -10,6 +10,7 @@ import { useNavigate, Link } from "react-router-dom";
 import FormErrors from "../atoms/forms/FormErrors";
 import LanguageSwitch from "../atoms/forms/LanguageSwitch";
 import { UserInterface } from "../interface/UserInterface";
+import { GLOBAL_URL } from "../GLOBAL_URL";
 
 const Login = () => {
     /**
@@ -47,7 +48,7 @@ const Login = () => {
         }
         else {
             try {
-                const response: Response = await fetch("http://localhost:5001/auth/signin", {
+                const response: Response = await fetch(GLOBAL_URL + "/auth/signin", {
                     headers: { 'Content-Type': 'application/json' },
                     method: "post",
                     body: JSON.stringify({ email, password })

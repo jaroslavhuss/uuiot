@@ -8,7 +8,7 @@ import FormErrors from "../atoms/forms/FormErrors";
 import LanguageSwitch from "../atoms/forms/LanguageSwitch";
 import FormSelect from "../atoms/forms/FormSelect";
 import { UserInterface } from "../interface/UserInterface";
-
+import { GLOBAL_URL } from "../GLOBAL_URL";
 const Register = () => {
     const navigate = useNavigate();
     const lang = useSelector((data: any) => { return data.language.language })
@@ -48,7 +48,7 @@ const Register = () => {
         }
         else {
             try {
-                const response: Response = await fetch("http://localhost:5001/auth/signup", {
+                const response: Response = await fetch(GLOBAL_URL + "/auth/signup", {
                     headers: {
                         'Content-Type': 'application/json'
                     },
