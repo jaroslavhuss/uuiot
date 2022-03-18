@@ -61,7 +61,6 @@ export class GatewayController {
   @Get('data/:id')
   async getGatewayData(@Param('id') id: string) {
     const data = await this.gateWayService.getGatewayData(id);
-    console.log(data);
     return data;
   }
 }

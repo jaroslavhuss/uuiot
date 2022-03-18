@@ -9,7 +9,7 @@ import AdminCreateGateway from "./routes/AdminRoutes/ManageGateways";
 
 import Register from "./routes/Register";
 import Login from "./routes/Login";
-import StudentsDashboard from "./routes/StudentsDashboard";
+import StudentsDashboard from "./routes/iotDashboard";
 //Global Error
 import ErrorComponent from "./components/Error";
 
