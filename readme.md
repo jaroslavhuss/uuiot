@@ -24,28 +24,32 @@
 5. type ```npm install dontenv axios node-cron node-red```
 6. Into ```weatherimporter.js``` place a code from https://github.com/jaroslavhuss/uuiot/blob/master/gateway/weatherimporter.js
 
+I forgot to mention - you need to also ```touch .env``` and place credentials there as followed:
+
+GW_USERNAME = Name of your GW (u have created this in cloud) \
+GW_PASSWORD = Password to the GW (u have created this as well)
+
 ### Now we need to setup node-red
 
+7. Open console on RPi and type ```node-red```
+8. this will start a local server. To access it you need to know your RPi IP address - mine runs on ```http://10.0.1.29:1880/```
+9. You have to import a json file into node-red UI from https://github.com/jaroslavhuss/uuiot/blob/master/gateway/node-red.json
+10. Do not forget to deploy changes done on node-red
 
-## How to prepare your environment for the local development
+### How to run the script on boot? 
 
-1. sudo npm install -g typescript
-2. cd server && npm install
-3. touch .env
-4. cd ..
-5. cd client && npm install
+The best way I found is described here: https://nodered.org/docs/faq/starting-node-red-on-boot
 
-## In server/.env file few lines must be saved
+Basically you need to type just this:
 
-DB_LOCAL = mongodb://127.0.0.1:27017/iot \
-DB_PRODUCTION = this string is provided by Honza or Jarda \
-DEV_MODE = This is ENUM type development|production \
-JWT_SECRET = JWT secret - Jarda can provide it \
-JWT_EXPIRE = 60min
-TEST = false
-## How to run whole dev environment with one command (FE and BE)
+1. sudo npm install -g pm2
+2. navigate to the folder where you downloaded the project (```weatherimporter.js```)
+3. Hit ```pm2 start weatherimporter.js --node-args="--max-old-space-size=128" -- -v```
+4. Update the list of tasks ```pm2 save```
+5. Lastyl hit ```pm2 startup``` - this will spill the command for @boot
+6. Just take that fakin command and place it into console
+7. Hit ```sudo reboot``` and u are fakin done! 
 
-cd server && npm run dev
 ## Weather station schema
 
 ![DHT22 Schema](dht22_schema.png)
