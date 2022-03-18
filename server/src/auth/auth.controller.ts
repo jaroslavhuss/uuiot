@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto, SignUpDto } from './dto';
 import { GatewayLogInDto } from 'src/gateway/dto';
+import { get } from 'http';
 @Controller('auth')
 export class AuthController {
   // Tohle udělá novou instanci AuthService, aby to člověk nemusel psát jak úplný trotl
@@ -20,5 +21,10 @@ export class AuthController {
   @Post('/gateway-signin')
   gatewaySignIn(@Body() dto: GatewayLogInDto) {
     return this.authService.gatewaySignIn(dto);
+  }
+
+  @Get('/')
+  justatest() {
+    return 'funguju';
   }
 }
