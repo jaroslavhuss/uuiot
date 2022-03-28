@@ -1,9 +1,9 @@
 import {
   Injectable,
-  ForbiddenException,
   BadRequestException,
+  ForbiddenException,
 } from '@nestjs/common';
-import { AuthDto, SignUpDto } from './dto';
+import { AuthDto, SignUpDto, UserIdDto } from './dto';
 import * as argon from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
@@ -14,6 +14,8 @@ import { Model } from 'mongoose';
 
 import { GatewayLogInDto } from 'src/gateway/dto';
 import { Gateway, GatewayDocument } from 'src/schemas';
+import { Tokens } from './types';
+
 @Injectable()
 export class AuthService {
   constructor(
@@ -21,8 +23,7 @@ export class AuthService {
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     @InjectModel(Gateway.name) private gatewayModel: Model<GatewayDocument>,
   ) {}
-
-  async signup(dto: SignUpDto) {
+  async signup(dto: SignUpDto): Promise<Tokens> {
     //Password actually matches
     if (dto.password !== dto.confirmedPassword)
       throw new BadRequestException(
@@ -35,6 +36,7 @@ export class AuthService {
     });
     if (findIfMongoEmailIsTaken)
       throw new BadRequestException('Email is already taken!');
+
     const user = await this.userModel.create({
       password: hashedPwd,
       email: dto.email,
@@ -42,16 +44,27 @@ export class AuthService {
       name: dto.name,
       surname: dto.surname,
     });
-    return this.signToken(user._id, user.email, user.authLevel, user);
+
+    const tokens = await this.signToken(user._id, user.email, user.authLevel);
+    await this.userModel.findByIdAndUpdate(
+      user._id,
+      {
+        refresh_token: tokens.refresh_token,
+      },
+      {
+        new: true,
+      },
+    );
+    return tokens;
   }
 
-  async signin(dto: AuthDto) {
+  async signin(dto: AuthDto): Promise<Tokens> {
     //find user by email
     const user = await this.userModel.findOne({
       email: dto.email,
     });
 
-    if (!user) throw new BadRequestException('This user does not exists');
+    if (!user) throw new ForbiddenException('This user does not exists');
 
     //compare passwords
     const passwordMatch: boolean = await argon.verify(
@@ -59,14 +72,71 @@ export class AuthService {
       dto.password,
     );
     if (!passwordMatch) throw new BadRequestException('Wrong password');
+    const tokens = await this.signToken(user._id, user.email, user.authLevel);
     await this.userModel.findOneAndUpdate(
       { _id: user.id },
-      { lastLoggedIn: new Date() },
+      { lastLoggedIn: new Date(), refresh_token: tokens.refresh_token },
       { new: true },
     );
-    return this.signToken(user.id, user.email, user.authLevel, user);
+    return this.signToken(user.id, user.email, user.authLevel);
   }
 
+  async logout(id: UserIdDto) {
+    const user = await this.userModel.findByIdAndUpdate(
+      id.id,
+      {
+        refresh_token: '',
+      },
+      { new: true },
+    );
+    if (!user)
+      throw new BadRequestException(
+        'User could not be logged off since it does not exist',
+      );
+    delete user.password;
+    return user;
+  }
+
+  async signToken(
+    userId: number,
+    email: string,
+    authLevel: string,
+  ): Promise<Tokens> {
+    const config = new ConfigService();
+    const payload = {
+      sub: userId,
+      email,
+      authLevel,
+    };
+    //Access token
+    const token = await this.jwt.signAsync(payload, {
+      expiresIn: config.get('JWT_EXPIRE'),
+      secret: config.get('JWT_SECRET'),
+    });
+    //Refresh token
+    const rToken = await this.jwt.signAsync(payload, {
+      expiresIn: config.get('JWT_EXPIRE_REFRESH'),
+      secret: config.get('JWT_REFRESH_SECRET'),
+    });
+
+    return { access_token: token, refresh_token: rToken };
+  }
+
+  //Update refresh token function
+
+  async updateRefreshToken(
+    userId: string,
+    refresh_token: string,
+  ): Promise<void> {
+    const hash = await argon.hash(refresh_token);
+    await this.userModel.findByIdAndUpdate(userId, {
+      rtToken: hash,
+    });
+  }
+
+  /**
+   * GW LOGIC IS HERE
+   */
   async gatewaySignIn(dto: GatewayLogInDto) {
     const gateway = await this.gatewayModel.findOne({ name: dto.name });
     if (!gateway) throw new BadRequestException('This gateway does not exist!');
@@ -88,24 +158,5 @@ export class AuthService {
       },
     );
     return { gateway_access_token: token };
-  }
-
-  async signToken(
-    userId: number,
-    email: string,
-    authLevel: string,
-    user: User,
-  ): Promise<{ access_token: string; user: User }> {
-    const config = new ConfigService();
-    const payload = {
-      sub: userId,
-      email,
-      authLevel,
-    };
-    const token = await this.jwt.signAsync(payload, {
-      expiresIn: config.get('JWT_EXPIRE'),
-      secret: config.get('JWT_SECRET'),
-    });
-    return { access_token: token, user };
   }
 }

@@ -7,7 +7,7 @@ import {
   Delete,
   Param,
 } from '@nestjs/common';
-import { createGateWayDto, GatewayID } from './dto';
+import { createGateWayDto, GatewaySaveHumidityDto } from './dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GatewayService } from './gateway.service';
 import { getUser } from 'src/auth/decorators';
@@ -16,24 +16,17 @@ import { getGateway } from './decorators';
 export class GatewayController {
   constructor(private gateWayService: GatewayService) {}
 
-  @Post('save')
+  @Post('save/humidity')
   @UseGuards(AuthGuard('jwtgateway'))
   saveGateWayData(
-    @Body() buffer: { data: string },
+    @Body() body: GatewaySaveHumidityDto[],
     @getGateway() gateway: any,
   ) {
-    const array = buffer.data.split('\n');
-    const parsedArray = array.map((eachItem) => {
-      try {
-        let data = JSON.parse(eachItem) || {};
-        data.gw = gateway;
-        return data;
-      } catch (error) {
-        //  console.log(error);
-      }
+    const humidityArray: any = body.map((h) => {
+      h.gw = gateway;
+      return h;
     });
-
-    return this.gateWayService.saveGateWayData(parsedArray);
+    return this.gateWayService.saveHumidity(humidityArray);
   }
 
   @Post('create')
@@ -60,7 +53,7 @@ export class GatewayController {
   @UseGuards(AuthGuard('jwt'))
   @Get('data/:id')
   async getGatewayData(@Param('id') id: string) {
-    const data = await this.gateWayService.getGatewayData(id);
-    return data;
+    // const data = await this.gateWayService.getGatewayData(id);
+    return 'ok';
   }
 }

@@ -1,6 +1,6 @@
 [
   {
-    "id": "48ce566ce23d1232",
+    "id": "19b9be357f301b73",
     "type": "tab",
     "label": "Flow 1",
     "disabled": false,
@@ -8,34 +8,271 @@
     "env": []
   },
   {
-    "id": "a289561af59f8d73",
+    "id": "686cb45f8c005168",
     "type": "serial in",
-    "z": "48ce566ce23d1232",
+    "z": "19b9be357f301b73",
     "name": "Weather Station",
     "serial": "627510a29e1feb98",
     "x": 160,
     "y": 260,
-    "wires": [["cd3ae5fc28af98f3"]]
+    "wires": [["eca5f3be9021a319", "7463c822626b4255"]]
   },
   {
-    "id": "cd3ae5fc28af98f3",
+    "id": "eca5f3be9021a319",
     "type": "function",
-    "z": "48ce566ce23d1232",
-    "name": "",
-    "func": "const parsedMsg = msg.payload.split(\" \");\nconst vlhkost = parsedMsg[1];\nconst teplota = parsedMsg[4];\nlet schema = {\n    teplota,\n    vlhkost,\n    date:new Date(),\n}\nmsg.payload = schema;\nreturn msg;",
+    "z": "19b9be357f301b73",
+    "name": "Get Temperature",
+    "func": "const parsedMsg = msg.payload.split(\" \");\nconst temperature = parsedMsg[4];\nlet schema = {\n    temperature:parseFloat(temperature),\n    wasSent:false,\n    date:new Date(),\n}\nmsg.payload = schema;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "initialize": "",
     "finalize": "",
     "libs": [],
-    "x": 420,
+    "x": 370,
     "y": 260,
-    "wires": [["a107498992496abd", "8984bb755f3e91af"]]
+    "wires": [["aae2a57e2b7202a2"]]
   },
   {
-    "id": "a107498992496abd",
+    "id": "aae2a57e2b7202a2",
+    "type": "mongodb out",
+    "z": "19b9be357f301b73",
+    "mongodb": "f52c314bfd15e0fc",
+    "name": "Save Temperature to DB",
+    "collection": "temperature",
+    "payonly": true,
+    "upsert": false,
+    "multi": false,
+    "operation": "store",
+    "x": 590,
+    "y": 260,
+    "wires": []
+  },
+  {
+    "id": "7463c822626b4255",
+    "type": "function",
+    "z": "19b9be357f301b73",
+    "name": "Get Humidity",
+    "func": "const parsedMsg = msg.payload.split(\" \");\nconst humidity = parsedMsg[1];\nlet schema = {\n    humidity:parseFloat(humidity), //Protože tady člověk nemůže používat TS.. Do piči\n    wasSent:false,\n    date:new Date(),\n}\nmsg.payload = schema;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 350,
+    "y": 320,
+    "wires": [["42a9755b0868fa0b"]]
+  },
+  {
+    "id": "42a9755b0868fa0b",
+    "type": "mongodb out",
+    "z": "19b9be357f301b73",
+    "mongodb": "f52c314bfd15e0fc",
+    "name": "Save Humidity to DB",
+    "collection": "humidity",
+    "payonly": true,
+    "upsert": false,
+    "multi": false,
+    "operation": "store",
+    "x": 580,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "e2e9d17b8f2498c6",
+    "type": "comment",
+    "z": "19b9be357f301b73",
+    "name": "Saves temperature and humidity to the local Mongo DB - each has its own collection",
+    "info": "For each there is a collection",
+    "x": 370,
+    "y": 220,
+    "wires": []
+  },
+  {
+    "id": "f9bb71eee7f87a35",
+    "type": "inject",
+    "z": "19b9be357f301b73",
+    "name": "Save Humidity Trigger",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "{\"name\":\"Jardova pracovna\", \"password\":\"Avargagloria1\"}",
+    "payloadType": "json",
+    "x": 180,
+    "y": 440,
+    "wires": [["8b2176ea83498143"]]
+  },
+  {
+    "id": "8b2176ea83498143",
+    "type": "http request",
+    "z": "19b9be357f301b73",
+    "name": "Get Token from the server",
+    "method": "POST",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "http://10.0.1.40:5001/auth/gateway-signin",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "senderr": false,
+    "x": 450,
+    "y": 440,
+    "wires": [["39e1f1a93c0bdf6d"]]
+  },
+  {
+    "id": "83f0ca2bda271389",
+    "type": "file",
+    "z": "19b9be357f301b73",
+    "name": "Log the error",
+    "filename": "weatherstationerrorlogs.txt",
+    "appendNewline": true,
+    "createDir": false,
+    "overwriteFile": "false",
+    "encoding": "none",
+    "x": 830,
+    "y": 480,
+    "wires": [[]]
+  },
+  {
+    "id": "a9d4b6bf323d6e95",
+    "type": "mongodb in",
+    "z": "19b9be357f301b73",
+    "mongodb": "f52c314bfd15e0fc",
+    "name": "Get Humidity Values from a DB",
+    "collection": "humidity",
+    "operation": "find",
+    "x": 1130,
+    "y": 420,
+    "wires": [["2a59f410fa17440e"]]
+  },
+  {
+    "id": "7ce89292beef687f",
+    "type": "comment",
+    "z": "19b9be357f301b73",
+    "name": "Tries to send first 500 documents of Humidity to the server",
+    "info": "For each there is a collection",
+    "x": 290,
+    "y": 400,
+    "wires": []
+  },
+  {
+    "id": "2a59f410fa17440e",
+    "type": "function",
+    "z": "19b9be357f301b73",
+    "name": "Only first 500 documents",
+    "func": "let data = [];\nmsg.payload.forEach((doc,i)=>{\n    if(i<500){\n        if(!doc.wasSent){\n            data.push(doc);\n        }\n            \n    }\n})\n\nmsg.headers = {\n    Authorization: \"Bearer \"+flow.get(\"gateway_access_token\")\n}\n\nmsg.payload = data;\nmsg.query = data;\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 1390,
+    "y": 420,
+    "wires": [["633b3e465284dfed"]]
+  },
+  {
+    "id": "ea306ee0e53dd456",
+    "type": "function",
+    "z": "19b9be357f301b73",
+    "name": "Set Token To Global Variable",
+    "func": "flow.set(\"gateway_access_token\", msg.payload.gateway_access_token);\nmsg.payload = {}\nreturn msg;\n",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 860,
+    "y": 420,
+    "wires": [["a9d4b6bf323d6e95"]]
+  },
+  {
+    "id": "39e1f1a93c0bdf6d",
+    "type": "switch",
+    "z": "19b9be357f301b73",
+    "name": "",
+    "property": "payload.gateway_access_token",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "nnull"
+      },
+      {
+        "t": "null"
+      }
+    ],
+    "checkall": "true",
+    "repair": true,
+    "outputs": 2,
+    "x": 670,
+    "y": 440,
+    "wires": [["ea306ee0e53dd456"], ["83f0ca2bda271389"]]
+  },
+  {
+    "id": "633b3e465284dfed",
+    "type": "http request",
+    "z": "19b9be357f301b73",
+    "name": "",
+    "method": "POST",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "http://10.0.1.40:5001/gateway/save/humidity",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "senderr": false,
+    "x": 1610,
+    "y": 420,
+    "wires": [["083e0916345d4205", "9f38062eadc4e548"]]
+  },
+  {
+    "id": "e34e8ac1248c17c1",
+    "type": "inject",
+    "z": "19b9be357f301b73",
+    "name": "",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 180,
+    "y": 640,
+    "wires": [["7213ecef1f6c8c26"]]
+  },
+  {
+    "id": "7213ecef1f6c8c26",
+    "type": "mongodb in",
+    "z": "19b9be357f301b73",
+    "mongodb": "f52c314bfd15e0fc",
+    "name": "Get Humidity Values from a DB",
+    "collection": "humidity",
+    "operation": "find",
+    "x": 430,
+    "y": 640,
+    "wires": [["2afc9411702fcee3"]]
+  },
+  {
+    "id": "2afc9411702fcee3",
     "type": "debug",
-    "z": "48ce566ce23d1232",
+    "z": "19b9be357f301b73",
     "name": "",
     "active": true,
     "tosidebar": true,
@@ -44,23 +281,40 @@
     "complete": "false",
     "statusVal": "",
     "statusType": "auto",
-    "x": 670,
+    "x": 690,
+    "y": 640,
+    "wires": []
+  },
+  {
+    "id": "083e0916345d4205",
+    "type": "debug",
+    "z": "19b9be357f301b73",
+    "name": "",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 1830,
     "y": 260,
     "wires": []
   },
   {
-    "id": "8984bb755f3e91af",
-    "type": "file",
-    "z": "48ce566ce23d1232",
-    "name": "Write_to_json",
-    "filename": "weatherdata.txt",
-    "appendNewline": true,
-    "createDir": false,
-    "overwriteFile": "false",
-    "encoding": "none",
-    "x": 640,
-    "y": 360,
-    "wires": [[]]
+    "id": "9f38062eadc4e548",
+    "type": "mongodb out",
+    "z": "19b9be357f301b73",
+    "mongodb": "f52c314bfd15e0fc",
+    "name": "Update all Docs",
+    "collection": "humidity",
+    "payonly": false,
+    "upsert": false,
+    "multi": true,
+    "operation": "update",
+    "x": 1900,
+    "y": 420,
+    "wires": []
   },
   {
     "id": "627510a29e1feb98",
@@ -80,5 +334,13 @@
     "out": "char",
     "addchar": "",
     "responsetimeout": "10000"
+  },
+  {
+    "id": "f52c314bfd15e0fc",
+    "type": "mongodb",
+    "hostname": "127.0.0.1",
+    "port": "27017",
+    "db": "admin",
+    "name": "Local Db"
   }
 ]
