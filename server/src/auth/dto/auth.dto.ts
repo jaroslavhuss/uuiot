@@ -61,3 +61,9 @@ export class SignUpDto {
   authLevel: 'iotuser';
   isUserApproved: Boolean;
 }
+
+export class UserIdDto {
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+}

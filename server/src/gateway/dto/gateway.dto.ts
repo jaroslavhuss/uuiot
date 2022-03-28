@@ -7,6 +7,7 @@ import {
   Matches,
   IsOptional,
   IsMongoId,
+  IsBoolean,
 } from 'class-validator';
 
 export class GatewaySaveDto {
@@ -16,6 +17,27 @@ export class GatewaySaveDto {
   temp: number;
   @IsNumber()
   hum: number;
+}
+
+export class GatewaySaveHumidityDto {
+  @IsString()
+  @IsNotEmpty()
+  _id: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  humidity: number;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  wasSent: boolean;
+
+  @IsString()
+  @IsNotEmpty()
+  date: string;
+
+  @IsOptional()
+  gw: string;
 }
 
 export class createGateWayDto {
