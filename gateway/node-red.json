@@ -21,7 +21,7 @@
     "id": "eca5f3be9021a319",
     "type": "function",
     "z": "19b9be357f301b73",
-    "name": "Get Temperature",
+    "name": "getTemperature()",
     "func": "const parsedMsg = msg.payload.split(\" \");\nconst temperature = parsedMsg[4];\nlet schema = {\n    temperature:parseFloat(temperature),\n    wasSent:false,\n    date:new Date(),\n}\nmsg.payload = schema;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
@@ -33,25 +33,10 @@
     "wires": [["aae2a57e2b7202a2"]]
   },
   {
-    "id": "aae2a57e2b7202a2",
-    "type": "mongodb out",
-    "z": "19b9be357f301b73",
-    "mongodb": "f52c314bfd15e0fc",
-    "name": "Save Temperature to DB",
-    "collection": "temperature",
-    "payonly": true,
-    "upsert": false,
-    "multi": false,
-    "operation": "store",
-    "x": 590,
-    "y": 260,
-    "wires": []
-  },
-  {
     "id": "7463c822626b4255",
     "type": "function",
     "z": "19b9be357f301b73",
-    "name": "Get Humidity",
+    "name": "getHumidity()",
     "func": "const parsedMsg = msg.payload.split(\" \");\nconst humidity = parsedMsg[1];\nlet schema = {\n    humidity:parseFloat(humidity), //Protože tady člověk nemůže používat TS.. Do piči\n    wasSent:false,\n    date:new Date(),\n}\nmsg.payload = schema;\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
@@ -61,21 +46,6 @@
     "x": 350,
     "y": 320,
     "wires": [["42a9755b0868fa0b"]]
-  },
-  {
-    "id": "42a9755b0868fa0b",
-    "type": "mongodb out",
-    "z": "19b9be357f301b73",
-    "mongodb": "f52c314bfd15e0fc",
-    "name": "Save Humidity to DB",
-    "collection": "humidity",
-    "payonly": true,
-    "upsert": false,
-    "multi": false,
-    "operation": "store",
-    "x": 580,
-    "y": 320,
-    "wires": []
   },
   {
     "id": "e2e9d17b8f2498c6",
@@ -91,7 +61,7 @@
     "id": "f9bb71eee7f87a35",
     "type": "inject",
     "z": "19b9be357f301b73",
-    "name": "Save Humidity Trigger",
+    "name": "humidity:Trigger",
     "props": [
       {
         "p": "payload"
@@ -104,7 +74,7 @@
     "topic": "",
     "payload": "{\"name\":\"Jardova pracovna\", \"password\":\"Avargagloria1\"}",
     "payloadType": "json",
-    "x": 180,
+    "x": 160,
     "y": 440,
     "wires": [["8b2176ea83498143"]]
   },
@@ -112,7 +82,7 @@
     "id": "8b2176ea83498143",
     "type": "http request",
     "z": "19b9be357f301b73",
-    "name": "Get Token from the server",
+    "name": "getToken()",
     "method": "POST",
     "ret": "obj",
     "paytoqs": "ignore",
@@ -122,7 +92,7 @@
     "proxy": "",
     "authType": "",
     "senderr": false,
-    "x": 450,
+    "x": 410,
     "y": 440,
     "wires": [["39e1f1a93c0bdf6d"]]
   },
@@ -130,27 +100,15 @@
     "id": "83f0ca2bda271389",
     "type": "file",
     "z": "19b9be357f301b73",
-    "name": "Log the error",
+    "name": "setError()",
     "filename": "weatherstationerrorlogs.txt",
     "appendNewline": true,
     "createDir": false,
     "overwriteFile": "false",
     "encoding": "none",
-    "x": 830,
+    "x": 820,
     "y": 480,
     "wires": [[]]
-  },
-  {
-    "id": "a9d4b6bf323d6e95",
-    "type": "mongodb in",
-    "z": "19b9be357f301b73",
-    "mongodb": "f52c314bfd15e0fc",
-    "name": "Get Humidity Values from a DB",
-    "collection": "humidity",
-    "operation": "find",
-    "x": 1130,
-    "y": 420,
-    "wires": [["2a59f410fa17440e"]]
   },
   {
     "id": "7ce89292beef687f",
@@ -166,8 +124,8 @@
     "id": "2a59f410fa17440e",
     "type": "function",
     "z": "19b9be357f301b73",
-    "name": "Only first 500 documents",
-    "func": "let data = [];\nmsg.payload.forEach((doc,i)=>{\n    if(i<500){\n        if(!doc.wasSent){\n            data.push(doc);\n        }\n            \n    }\n})\n\nmsg.headers = {\n    Authorization: \"Bearer \"+flow.get(\"gateway_access_token\")\n}\n\nmsg.payload = data;\nmsg.query = data;\n\nreturn msg;",
+    "name": "getReady500Docs()",
+    "func": "let data = [];\nlet counter = 0;\nmsg.payload.forEach((doc,i)=>{\n    if(counter<500){\n        if(!doc.wasSent){\n            data.push(doc);\n            counter++;\n        }\n    }\n})\n\nmsg.headers = {\n    Authorization: \"Bearer \"+flow.get(\"gateway_access_token\")\n}\n//This goes to the server\nmsg.payload = data;\n//This are the original values - they are getting ready for update\nmsg.original = data;\n\nreturn msg;",
     "outputs": 1,
     "noerr": 0,
     "initialize": "",
@@ -181,14 +139,14 @@
     "id": "ea306ee0e53dd456",
     "type": "function",
     "z": "19b9be357f301b73",
-    "name": "Set Token To Global Variable",
+    "name": "setTokenToGlobal()",
     "func": "flow.set(\"gateway_access_token\", msg.payload.gateway_access_token);\nmsg.payload = {}\nreturn msg;\n",
     "outputs": 1,
     "noerr": 0,
     "initialize": "",
     "finalize": "",
     "libs": [],
-    "x": 860,
+    "x": 830,
     "y": 420,
     "wires": [["a9d4b6bf323d6e95"]]
   },
@@ -196,7 +154,7 @@
     "id": "39e1f1a93c0bdf6d",
     "type": "switch",
     "z": "19b9be357f301b73",
-    "name": "",
+    "name": "catchError()",
     "property": "payload.gateway_access_token",
     "propertyType": "msg",
     "rules": [
@@ -210,7 +168,7 @@
     "checkall": "true",
     "repair": true,
     "outputs": 2,
-    "x": 670,
+    "x": 590,
     "y": 440,
     "wires": [["ea306ee0e53dd456"], ["83f0ca2bda271389"]]
   },
@@ -218,7 +176,7 @@
     "id": "633b3e465284dfed",
     "type": "http request",
     "z": "19b9be357f301b73",
-    "name": "",
+    "name": "sendDocsToCloud()",
     "method": "POST",
     "ret": "obj",
     "paytoqs": "ignore",
@@ -230,76 +188,93 @@
     "senderr": false,
     "x": 1610,
     "y": 420,
-    "wires": [["083e0916345d4205", "9f38062eadc4e548"]]
+    "wires": [["6011d9c3e912ce20"]]
   },
   {
-    "id": "e34e8ac1248c17c1",
-    "type": "inject",
+    "id": "6011d9c3e912ce20",
+    "type": "switch",
     "z": "19b9be357f301b73",
-    "name": "",
-    "props": [
+    "name": "catchError()",
+    "property": "payload.status",
+    "propertyType": "msg",
+    "rules": [
       {
-        "p": "payload"
+        "t": "null"
       },
       {
-        "p": "topic",
+        "t": "eq",
+        "v": "500",
         "vt": "str"
       }
     ],
-    "repeat": "",
-    "crontab": "",
-    "once": false,
-    "onceDelay": 0.1,
-    "topic": "",
-    "payload": "",
-    "payloadType": "date",
-    "x": 180,
-    "y": 640,
-    "wires": [["7213ecef1f6c8c26"]]
+    "checkall": "true",
+    "repair": false,
+    "outputs": 2,
+    "x": 1790,
+    "y": 420,
+    "wires": [["839a4d99e87d3da6"], ["bb74912291cd8c3f"]]
   },
   {
-    "id": "7213ecef1f6c8c26",
+    "id": "bb74912291cd8c3f",
+    "type": "file",
+    "z": "19b9be357f301b73",
+    "name": "Log the error",
+    "filename": "weatherstationerrorlogs.txt",
+    "appendNewline": true,
+    "createDir": false,
+    "overwriteFile": "false",
+    "encoding": "none",
+    "x": 1990,
+    "y": 500,
+    "wires": [["a0cbf4f9d9339a23"]]
+  },
+  {
+    "id": "839a4d99e87d3da6",
+    "type": "function",
+    "z": "19b9be357f301b73",
+    "name": "prepareDataForLocalMongoUpdate()",
+    "func": "let ObjectId = mongodb.ObjectId;\nconst arrayToBeUpdated = msg.original.map((m,i)=>{\n    return ObjectId(m._id)\n})\nmsg.query = { \"_id\": { \"$in\": arrayToBeUpdated} };\nmsg.payload = {\"$set\":{\"wasSent\":true}};\nreturn msg;\n\n\n\n\n\n",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [
+      {
+        "var": "mongodb",
+        "module": "mongodb"
+      }
+    ],
+    "x": 2050,
+    "y": 320,
+    "wires": [["9f38062eadc4e548"]]
+  },
+  {
+    "id": "a0cbf4f9d9339a23",
+    "type": "debug",
+    "z": "19b9be357f301b73",
+    "name": "",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 2170,
+    "y": 500,
+    "wires": []
+  },
+  {
+    "id": "a9d4b6bf323d6e95",
     "type": "mongodb in",
     "z": "19b9be357f301b73",
     "mongodb": "f52c314bfd15e0fc",
-    "name": "Get Humidity Values from a DB",
+    "name": "getHumidityFromLocalMongo()",
     "collection": "humidity",
     "operation": "find",
-    "x": 430,
-    "y": 640,
-    "wires": [["2afc9411702fcee3"]]
-  },
-  {
-    "id": "2afc9411702fcee3",
-    "type": "debug",
-    "z": "19b9be357f301b73",
-    "name": "",
-    "active": true,
-    "tosidebar": true,
-    "console": false,
-    "tostatus": false,
-    "complete": "false",
-    "statusVal": "",
-    "statusType": "auto",
-    "x": 690,
-    "y": 640,
-    "wires": []
-  },
-  {
-    "id": "083e0916345d4205",
-    "type": "debug",
-    "z": "19b9be357f301b73",
-    "name": "",
-    "active": true,
-    "tosidebar": true,
-    "console": false,
-    "tostatus": false,
-    "complete": "false",
-    "statusVal": "",
-    "statusType": "auto",
-    "x": 1830,
-    "y": 260,
-    "wires": []
+    "x": 1130,
+    "y": 420,
+    "wires": [["2a59f410fa17440e"]]
   },
   {
     "id": "9f38062eadc4e548",
@@ -312,8 +287,208 @@
     "upsert": false,
     "multi": true,
     "operation": "update",
-    "x": 1900,
-    "y": 420,
+    "x": 2380,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "42a9755b0868fa0b",
+    "type": "mongodb out",
+    "z": "19b9be357f301b73",
+    "mongodb": "f52c314bfd15e0fc",
+    "name": "saveHumidityToMongo()",
+    "collection": "humidity",
+    "payonly": true,
+    "upsert": false,
+    "multi": false,
+    "operation": "store",
+    "x": 590,
+    "y": 320,
+    "wires": []
+  },
+  {
+    "id": "aae2a57e2b7202a2",
+    "type": "mongodb out",
+    "z": "19b9be357f301b73",
+    "mongodb": "f52c314bfd15e0fc",
+    "name": "saveTemperatureToMongo()",
+    "collection": "temperature",
+    "payonly": true,
+    "upsert": false,
+    "multi": false,
+    "operation": "store",
+    "x": 600,
+    "y": 260,
+    "wires": []
+  },
+  {
+    "id": "289387c96de027b5",
+    "type": "inject",
+    "z": "19b9be357f301b73",
+    "name": "",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "[]",
+    "payloadType": "json",
+    "x": 110,
+    "y": 740,
+    "wires": [["3c57df8ded7c92dd"]]
+  },
+  {
+    "id": "3c57df8ded7c92dd",
+    "type": "mongodb4",
+    "z": "19b9be357f301b73",
+    "clientNode": "5e1c14f38121ceb0",
+    "collection": "humidity",
+    "operation": "find",
+    "output": "toArray",
+    "name": "getHumidityValuesFromDb()",
+    "x": 420,
+    "y": 740,
+    "wires": [["e82088631953d445"]]
+  },
+  {
+    "id": "19e40d56567dceb8",
+    "type": "mongodb out",
+    "z": "19b9be357f301b73",
+    "mongodb": "f52c314bfd15e0fc",
+    "name": "Update documents",
+    "collection": "humidity",
+    "payonly": false,
+    "upsert": false,
+    "multi": true,
+    "operation": "update",
+    "x": 1070,
+    "y": 740,
+    "wires": []
+  },
+  {
+    "id": "e82088631953d445",
+    "type": "function",
+    "z": "19b9be357f301b73",
+    "name": "prepareDataForLocalMongoUpdate()",
+    "func": "let ObjectId = mongodb.ObjectId;\nconst arrayToBeUpdated = msg.payload.map((m,i)=>{\n    return ObjectId(m._id)\n})\n\nmsg.query = { \"_id\": { \"$in\": arrayToBeUpdated} };\nmsg.payload = {\"$set\":{\"wasSent\":false}};\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [
+      {
+        "var": "mongodb",
+        "module": "mongodb"
+      }
+    ],
+    "x": 770,
+    "y": 740,
+    "wires": [["19e40d56567dceb8"]]
+  },
+  {
+    "id": "5d59b3f6aac0629d",
+    "type": "inject",
+    "z": "19b9be357f301b73",
+    "name": "",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "[]",
+    "payloadType": "json",
+    "x": 110,
+    "y": 660,
+    "wires": [["ed444beb57e5a19d"]]
+  },
+  {
+    "id": "ed444beb57e5a19d",
+    "type": "mongodb4",
+    "z": "19b9be357f301b73",
+    "clientNode": "5e1c14f38121ceb0",
+    "collection": "humidity",
+    "operation": "find",
+    "output": "toArray",
+    "name": "getHumidityValuesFromDb()",
+    "x": 360,
+    "y": 660,
+    "wires": [["612e43e6c0593124"]]
+  },
+  {
+    "id": "612e43e6c0593124",
+    "type": "debug",
+    "z": "19b9be357f301b73",
+    "name": "",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 630,
+    "y": 660,
+    "wires": []
+  },
+  {
+    "id": "38b0d4a443d3a163",
+    "type": "comment",
+    "z": "19b9be357f301b73",
+    "name": "TESTING FUNCTIONS",
+    "info": "For each there is a collection",
+    "x": 140,
+    "y": 560,
+    "wires": []
+  },
+  {
+    "id": "c718ccba90c39f2e",
+    "type": "comment",
+    "z": "19b9be357f301b73",
+    "name": "Reverts \"wasSent\" back to false for all objects!",
+    "info": "For each there is a collection",
+    "x": 220,
+    "y": 700,
+    "wires": [],
+    "icon": "node-red/alert.svg"
+  },
+  {
+    "id": "9c4246ca1d226fed",
+    "type": "comment",
+    "z": "19b9be357f301b73",
+    "name": "TESTING FUNCTIONS",
+    "info": "For each there is a collection",
+    "x": 340,
+    "y": 560,
+    "wires": []
+  },
+  {
+    "id": "bd81ba774cdab192",
+    "type": "comment",
+    "z": "19b9be357f301b73",
+    "name": "TESTING FUNCTIONS",
+    "info": "For each there is a collection",
+    "x": 540,
+    "y": 560,
+    "wires": []
+  },
+  {
+    "id": "f8ebf8ca74d20279",
+    "type": "comment",
+    "z": "19b9be357f301b73",
+    "name": "TESTING FUNCTIONS",
+    "info": "For each there is a collection",
+    "x": 740,
+    "y": 560,
     "wires": []
   },
   {
@@ -342,5 +517,22 @@
     "port": "27017",
     "db": "admin",
     "name": "Local Db"
+  },
+  {
+    "id": "5e1c14f38121ceb0",
+    "type": "mongodb4-client",
+    "name": "Local Server",
+    "protocol": "mongodb",
+    "hostname": "localhost",
+    "port": "27017",
+    "dbName": "admin",
+    "authSource": "",
+    "authMechanism": "DEFAULT",
+    "tls": false,
+    "tlsCAFile": "",
+    "tlsInsecure": false,
+    "uri": "",
+    "advanced": "",
+    "uriTabActive": "tab-uri-simple"
   }
 ]
