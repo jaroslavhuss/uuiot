@@ -4,10 +4,20 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Gateway, GatewayDocument } from 'src/schemas';
-import { Humidity, HumidityDocument } from 'src/schemas';
+import {
+  Gateway,
+  GatewayDocument,
+  Humidity,
+  HumidityDocument,
+  Temperature,
+  TemperatureDocument,
+} from 'src/schemas';
 import { Model } from 'mongoose';
-import { createGateWayDto, GatewaySaveHumidityDto } from './dto';
+import {
+  createGateWayDto,
+  GatewaySaveHumidityDto,
+  GatewaySaveTemperatureDto,
+} from './dto';
 import * as argon from 'argon2';
 
 @Injectable()
@@ -15,6 +25,8 @@ export class GatewayService {
   constructor(
     @InjectModel(Gateway.name) private gatewayModel: Model<GatewayDocument>,
     @InjectModel(Humidity.name) private humidityModel: Model<HumidityDocument>,
+    @InjectModel(Temperature.name)
+    private temperatureModel: Model<TemperatureDocument>,
   ) {}
   async createGateway(dto: createGateWayDto) {
     const doesSuchANameExist = await this.gatewayModel.find({
@@ -55,10 +67,36 @@ export class GatewayService {
       if (error) return new InternalServerErrorException(error.message);
     }
   }
+  async saveTemperature(data: GatewaySaveTemperatureDto) {
+    try {
+      const savedTemperature = await this.temperatureModel.insertMany(data);
+      if (!savedTemperature) {
+        throw new InternalServerErrorException(
+          'Temperature could not be saved - internal server error',
+        );
+      }
+      savedTemperature.forEach((doc) => {
+        doc.wasSent = true;
+      });
+      return savedTemperature;
+    } catch (error: any) {
+      if (error) return new InternalServerErrorException(error.message);
+    }
+  }
 
   async getHumidity(id: string) {
     try {
       const gwData = await this.humidityModel.find({ gw: id });
+      return gwData;
+    } catch (error) {
+      if (error) {
+        return new BadRequestException('Not GW id!');
+      }
+    }
+  }
+  async getTemperature(id: string) {
+    try {
+      const gwData = await this.temperatureModel.find({ gw: id });
       return gwData;
     } catch (error) {
       if (error) {

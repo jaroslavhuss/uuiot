@@ -39,6 +39,26 @@ export class GatewaySaveHumidityDto {
   @IsOptional()
   gw: string;
 }
+export class GatewaySaveTemperatureDto {
+  @IsString()
+  @IsNotEmpty()
+  _id: string;
+
+  @IsNumber()
+  @IsNotEmpty()
+  temperature: number;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  wasSent: boolean;
+
+  @IsString()
+  @IsNotEmpty()
+  date: string;
+
+  @IsOptional()
+  gw: string;
+}
 
 export class createGateWayDto {
   @IsString()
