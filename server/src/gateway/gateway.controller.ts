@@ -7,7 +7,11 @@ import {
   Delete,
   Param,
 } from '@nestjs/common';
-import { createGateWayDto, GatewaySaveHumidityDto } from './dto';
+import {
+  createGateWayDto,
+  GatewaySaveHumidityDto,
+  GatewaySaveTemperatureDto,
+} from './dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GatewayService } from './gateway.service';
 import { getUser } from 'src/auth/decorators';
@@ -18,7 +22,7 @@ export class GatewayController {
 
   @Post('save/humidity')
   @UseGuards(AuthGuard('jwtgateway'))
-  saveGateWayData(
+  saveHumidity(
     @Body() body: GatewaySaveHumidityDto[],
     @getGateway() gateway: any,
   ) {
@@ -27,6 +31,19 @@ export class GatewayController {
       return h;
     });
     return this.gateWayService.saveHumidity(humidityArray);
+  }
+
+  @Post('save/temperature')
+  @UseGuards(AuthGuard('jwtgateway'))
+  saveTemperature(
+    @Body() body: GatewaySaveTemperatureDto[],
+    @getGateway() gateway: any,
+  ) {
+    const temperatureArray: any = body.map((h) => {
+      h.gw = gateway;
+      return h;
+    });
+    return this.gateWayService.saveTemperature(temperatureArray);
   }
 
   @Post('create')
