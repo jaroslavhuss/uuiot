@@ -30,7 +30,9 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   async validate(payload: any) {
-    const user = await this.userModel.findById({ _id: payload.sub });
+    const user = await this.userModel
+      .findById({ _id: payload.sub })
+      .select('-password');
     if (!user) throw new ForbiddenException('You must be logged in!');
 
     if (!user.isUserApproved)
@@ -56,7 +58,9 @@ export class JwtStrategyAdmin extends PassportStrategy(Strategy, 'jwtadmin') {
   }
 
   async validate(payload: payLoadInterface) {
-    const user = await this.userModel.findById({ _id: payload.sub });
+    const user = await this.userModel
+      .findById({ _id: payload.sub })
+      .select('-password');
     if (!user) throw new ForbiddenException('You must be logged in!');
     if (!user.isUserApproved)
       throw new ForbiddenException(
@@ -64,7 +68,6 @@ export class JwtStrategyAdmin extends PassportStrategy(Strategy, 'jwtadmin') {
       );
     if (user.authLevel !== 'iotadmin')
       throw new ForbiddenException('Not enough privileges!');
-    delete user.password;
     return { user, payload };
   }
 }
@@ -86,7 +89,9 @@ export class JwtStrategyGateway extends PassportStrategy(
   }
 
   async validate(payload: { name: string }) {
-    const gateway = await this.gatewayModel.findOne({ name: payload.name });
+    const gateway = await this.gatewayModel
+      .findOne({ name: payload.name })
+      .select('-password');
     if (!gateway) throw new ForbiddenException('You must be logged in!');
     return { gateway };
   }

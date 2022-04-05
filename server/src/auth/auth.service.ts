@@ -58,7 +58,7 @@ export class AuthService {
     return tokens;
   }
 
-  async signin(dto: AuthDto): Promise<Tokens> {
+  async signin(dto: AuthDto): Promise<any> {
     //find user by email
     const user = await this.userModel.findOne({
       email: dto.email,
@@ -78,7 +78,11 @@ export class AuthService {
       { lastLoggedIn: new Date(), refresh_token: tokens.refresh_token },
       { new: true },
     );
-    return this.signToken(user.id, user.email, user.authLevel);
+    user.password = null;
+    return {
+      user,
+      tokens: await this.signToken(user.id, user.email, user.authLevel),
+    };
   }
 
   async logout(id: UserIdDto) {

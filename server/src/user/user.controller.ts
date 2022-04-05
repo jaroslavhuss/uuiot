@@ -20,6 +20,7 @@ export class UserController {
   @UseGuards(AuthGuard('jwt'))
   @Get('me')
   whoAmI(@getUser() user: User) {
+    delete user.password;
     return user;
   }
 
