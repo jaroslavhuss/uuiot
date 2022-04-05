@@ -28,6 +28,10 @@ export class GatewayService {
     @InjectModel(Temperature.name)
     private temperatureModel: Model<TemperatureDocument>,
   ) {}
+  /**
+   * @param dto
+   * @returns created gateway
+   */
   async createGateway(dto: createGateWayDto) {
     const doesSuchANameExist = await this.gatewayModel.find({
       name: [dto.name],
@@ -41,16 +45,28 @@ export class GatewayService {
     return gateway;
   }
 
+  /**
+   * @returns list of all gateways
+   */
   async getAllGateways() {
     const gateways = await this.gatewayModel.find({});
     return gateways;
   }
 
+  /**
+   * @param id
+   * @returns delets gateway based on ID
+   */
   async deleteGateway(id: string) {
     const user = await this.gatewayModel.findByIdAndDelete(id);
     return user;
   }
 
+  /**
+   *
+   * @param data
+   * @returns created humidity documents
+   */
   async saveHumidity(data: GatewaySaveHumidityDto) {
     try {
       const savedHumidity = await this.humidityModel.insertMany(data);
@@ -67,6 +83,12 @@ export class GatewayService {
       if (error) return new InternalServerErrorException(error.message);
     }
   }
+
+  /**
+   *
+   * @param data
+   * @returns created temperature documents
+   */
   async saveTemperature(data: GatewaySaveTemperatureDto) {
     try {
       const savedTemperature = await this.temperatureModel.insertMany(data);
@@ -84,9 +106,14 @@ export class GatewayService {
     }
   }
 
+  /**
+   * @param id (gw id)
+   * @returns all GW humidity values based on GW ID and date range
+   */
   async getHumidity(id: string) {
     try {
       const gwData = await this.humidityModel.find({ gw: id });
+      if (!gwData) throw new BadRequestException('gw not found');
       return gwData;
     } catch (error) {
       if (error) {
@@ -94,9 +121,16 @@ export class GatewayService {
       }
     }
   }
+
+  /**
+   *
+   * @param id (gw id)
+   * @returns all GW temperature values based on GW ID and date range
+   */
   async getTemperature(id: string) {
     try {
       const gwData = await this.temperatureModel.find({ gw: id });
+      if (!gwData) throw new BadRequestException('gw not found');
       return gwData;
     } catch (error) {
       if (error) {
