@@ -69,16 +69,28 @@ export class GatewayController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('data/humidity/:id')
-  async getGateWayHumidityData(@Param('id') id: string) {
-    const data = await this.gateWayService.getHumidity(id);
+  @Post('data/humidity/')
+  async getGateWayHumidityData(
+    @Body() body: { id: string; startDate: string; endDate: string },
+  ) {
+    const sDate: string = new Date(body.startDate).toISOString().split('T')[0];
+    const eDate: string = new Date(body.endDate).toISOString().split('T')[0];
+    const data = await this.gateWayService.getHumidity(body.id, sDate, eDate);
     return data;
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('data/temperature/:id')
-  async getGateWayTemperatureData(@Param('id') id: string) {
-    const data = await this.gateWayService.getTemperature(id);
+  @Post('data/temperature/')
+  async getGateWayTemperatureData(
+    @Body() body: { id: string; startDate: string; endDate: string },
+  ) {
+    const sDate: string = new Date(body.startDate).toISOString().split('T')[0];
+    const eDate: string = new Date(body.endDate).toISOString().split('T')[0];
+    const data = await this.gateWayService.getTemperature(
+      body.id,
+      sDate,
+      eDate,
+    );
     return data;
   }
 }

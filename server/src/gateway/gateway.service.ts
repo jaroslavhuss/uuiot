@@ -19,7 +19,6 @@ import {
   GatewaySaveTemperatureDto,
 } from './dto';
 import * as argon from 'argon2';
-
 @Injectable()
 export class GatewayService {
   constructor(
@@ -110,9 +109,17 @@ export class GatewayService {
    * @param id (gw id)
    * @returns all GW humidity values based on GW ID and date range
    */
-  async getHumidity(id: string) {
+  async getHumidity(id: string, startDate: string, endDate: string) {
     try {
-      const gwData = await this.humidityModel.find({ gw: id });
+      const sDate = new Date(startDate).toISOString();
+      const eDate = new Date(endDate).toISOString();
+      const gwData = await this.humidityModel.find({
+        gw: id,
+        date: {
+          $gte: sDate,
+          //   $lt: eDate,
+        },
+      });
       if (!gwData) throw new BadRequestException('gw not found');
       return gwData;
     } catch (error) {
@@ -127,9 +134,17 @@ export class GatewayService {
    * @param id (gw id)
    * @returns all GW temperature values based on GW ID and date range
    */
-  async getTemperature(id: string) {
+  async getTemperature(id: string, startDate: string, endDate: string) {
     try {
-      const gwData = await this.temperatureModel.find({ gw: id });
+      const sDate = new Date(startDate).toISOString();
+      const eDate = new Date(endDate).toISOString();
+      const gwData = await this.temperatureModel.find({
+        gw: id,
+        date: {
+          $gte: sDate,
+          //   $lt: eDate,
+        },
+      });
       if (!gwData) throw new BadRequestException('gw not found');
       return gwData;
     } catch (error) {

@@ -53,12 +53,12 @@ const Login = () => {
                     method: "post",
                     body: JSON.stringify({ email, password })
                 })
-                const data: { access_token: string, user: UserInterface, message: string } = await response.json();
-                if (!data.access_token) throw new Error(data.message);
+                const data: { tokens: { access_token: string, refresh_token: string }, user: UserInterface, message: string } = await response.json();
+                if (!data.tokens.access_token) throw new Error(data.message);
                 if (!data.user) throw new Error("Could not fetch user's data")
                 if (!data.user.isUserApproved) throw new Error("User was not verified yet!")
-                localStorage.setItem("token", data.access_token);
-                dispatch(authUserSuccess({ token: data.access_token, user: data.user }));
+                localStorage.setItem("token", data.tokens.access_token);
+                dispatch(authUserSuccess({ token: data.tokens.access_token, user: data.user }));
             } catch (error: any) {
                 setErrorStatus(false);
                 setErrorMessage(error.message)
