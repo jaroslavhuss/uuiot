@@ -67,10 +67,18 @@ export class GatewayController {
     const user = await this.gateWayService.deleteGateway(id);
     return user;
   }
+
   @UseGuards(AuthGuard('jwt'))
-  @Get('data/:id')
-  async getGatewayData(@Param('id') id: string) {
-    // const data = await this.gateWayService.getGatewayData(id);
-    return 'ok';
+  @Get('data/humidity/:id')
+  async getGateWayHumidityData(@Param('id') id: string) {
+    const data = await this.gateWayService.getHumidity(id);
+    return data;
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('data/temperature/:id')
+  async getGateWayTemperatureData(@Param('id') id: string) {
+    const data = await this.gateWayService.getTemperature(id);
+    return data;
   }
 }
