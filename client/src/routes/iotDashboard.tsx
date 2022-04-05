@@ -148,7 +148,7 @@ const StudentsDashboard = () => {
                         To:{" "}
                         <input value={endDate.toISOString().substring(0, 10)} type="date" onChange={(e: any) => {
                             setEndDate(new Date(e.target.value))
-                        }} min={todayFunciton().toISOString().substring(0, 10)} />
+                        }} max={todayFunciton().toISOString().substring(0, 10)} />
                         {"  "}
                         <span onClick={() => {
                             getDataFromGW(gwID, startDate, endDate);

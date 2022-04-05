@@ -109,15 +109,25 @@ export class GatewayService {
    * @param id (gw id)
    * @returns all GW humidity values based on GW ID and date range
    */
-  async getHumidity(id: string, startDate: string, endDate: string) {
+  async getHumidity(id: string, startDate: any, endDate: any) {
     try {
       const sDate = new Date(startDate).toISOString();
-      const eDate = new Date(endDate).toISOString();
+      const eDate = new Date(
+        new Date(endDate).setHours(23, 59, 59),
+      ).toISOString();
+
+      console.log(eDate);
+      const diffTime: any = Math.abs(
+        //@ts-ignore
+        new Date(startDate) - new Date(endDate),
+      );
+      const diffDays: number = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      console.log(diffDays);
       const gwData = await this.humidityModel.find({
         gw: id,
         date: {
           $gte: sDate,
-          //   $lt: eDate,
+          $lte: diffDays > 0 && eDate,
         },
       });
       if (!gwData) throw new BadRequestException('gw not found');
