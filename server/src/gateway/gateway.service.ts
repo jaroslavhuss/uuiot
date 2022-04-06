@@ -115,14 +115,11 @@ export class GatewayService {
       const eDate = new Date(
         new Date(endDate).setHours(23, 59, 59),
       ).toISOString();
-
-      console.log(eDate);
       const diffTime: any = Math.abs(
         //@ts-ignore
         new Date(startDate) - new Date(endDate),
       );
       const diffDays: number = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      console.log(diffDays);
       const gwData = await this.humidityModel.find({
         gw: id,
         date: {
@@ -130,7 +127,9 @@ export class GatewayService {
           $lte: diffDays > 0 && eDate,
         },
       });
+
       if (!gwData) throw new BadRequestException('gw not found');
+
       return gwData;
     } catch (error) {
       if (error) {
