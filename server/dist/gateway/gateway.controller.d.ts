@@ -1,7 +1,4 @@
-/// <reference types="mongoose/types/pipelinestage" />
-/// <reference types="mongoose/types/error" />
-/// <reference types="mongoose/types/connection" />
-/// <reference types="mongoose" />
+import { BadRequestException } from '@nestjs/common';
 import { createGateWayDto, GatewaySaveHumidityDto, GatewaySaveTemperatureDto } from './dto';
 import { GatewayService } from './gateway.service';
 export declare class GatewayController {
@@ -13,7 +10,7 @@ export declare class GatewayController {
     saveTemperature(body: GatewaySaveTemperatureDto[], gateway: any): Promise<import("@nestjs/common").InternalServerErrorException | (import("../schemas").Temperature & import("mongoose").Document<any, any, any> & {
         _id: any;
     })[]>;
-    createGateWay(dto: createGateWayDto, user: any): Promise<import("@nestjs/common").BadRequestException | (import("../schemas").Gateway & import("mongoose").Document<any, any, any> & {
+    createGateWay(dto: createGateWayDto, user: any): Promise<BadRequestException | (import("../schemas").Gateway & import("mongoose").Document<any, any, any> & {
         _id: any;
     })>;
     getAllGateways(): Promise<(import("../schemas").Gateway & import("mongoose").Document<any, any, any> & {
@@ -26,14 +23,10 @@ export declare class GatewayController {
         id: string;
         startDate: string;
         endDate: string;
-    }): Promise<import("@nestjs/common").BadRequestException | (import("../schemas").Humidity & import("mongoose").Document<any, any, any> & {
-        _id: any;
-    })[]>;
+    }): Promise<any[] | BadRequestException>;
     getGateWayTemperatureData(body: {
         id: string;
         startDate: string;
         endDate: string;
-    }): Promise<import("@nestjs/common").BadRequestException | (import("../schemas").Temperature & import("mongoose").Document<any, any, any> & {
-        _id: any;
-    })[]>;
+    }): Promise<any[] | BadRequestException>;
 }
