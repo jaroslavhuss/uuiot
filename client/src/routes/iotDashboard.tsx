@@ -26,7 +26,7 @@ interface IHumidity {
 interface ITemperature {
     date: string
     gw: string
-    humidity: number
+    temperature: number
     __v: number
     _id: number
 }
@@ -107,8 +107,17 @@ const StudentsDashboard = () => {
 
             const humidityData: IHumidity[] = await responseHumidity.json();
             const temperatureData: ITemperature[] = await responseTemperature.json();
-
+            humidityData.forEach((h) => {
+                const niceDate = new Date(h.date).toLocaleDateString() + " " + new Date(h.date).toLocaleTimeString();
+                h.date = niceDate;
+                h.humidity = parseFloat(h.humidity.toFixed(1));
+            })
             setHumidity(humidityData)
+            temperatureData.forEach((h: ITemperature) => {
+                const niceDate = new Date(h.date).toLocaleDateString() + " " + new Date(h.date).toLocaleTimeString();
+                h.date = niceDate;
+                h.temperature = parseFloat(h.temperature.toFixed(1));
+            })
             setTemperature(temperatureData);
             setIsLoading(false);
         } catch (error) {
@@ -144,11 +153,11 @@ const StudentsDashboard = () => {
                         From:{" "}
                         <input value={startDate.toISOString().substring(0, 10)} type="date" onChange={(e: any) => {
                             setStartDate(new Date(e.target.value))
-                        }} max={todayFunciton().toISOString().substring(0, 10)} />{" "}
+                        }} max={endDate.toISOString().substring(0, 10)} />{" "}
                         To:{" "}
                         <input value={endDate.toISOString().substring(0, 10)} type="date" onChange={(e: any) => {
                             setEndDate(new Date(e.target.value))
-                        }} max={todayFunciton().toISOString().substring(0, 10)} />
+                        }} max={todayFunciton().toISOString().substring(0, 10)} min={startDate.toISOString().substring(0, 10)} />
                         {"  "}
                         <span onClick={() => {
                             getDataFromGW(gwID, startDate, endDate);

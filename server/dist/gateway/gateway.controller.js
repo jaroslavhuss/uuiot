@@ -53,12 +53,16 @@ let GatewayController = class GatewayController {
     async getGateWayHumidityData(body) {
         const sDate = new Date(body.startDate).toISOString().split('T')[0];
         const eDate = new Date(body.endDate).toISOString().split('T')[0];
+        if (sDate > eDate)
+            throw new common_1.BadRequestException('Bad date range');
         const data = await this.gateWayService.getHumidity(body.id, sDate, eDate);
         return data;
     }
     async getGateWayTemperatureData(body) {
         const sDate = new Date(body.startDate).toISOString().split('T')[0];
         const eDate = new Date(body.endDate).toISOString().split('T')[0];
+        if (sDate > eDate)
+            throw new common_1.BadRequestException('Bad date range');
         const data = await this.gateWayService.getTemperature(body.id, sDate, eDate);
         return data;
     }

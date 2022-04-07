@@ -6,6 +6,7 @@ import {
   Get,
   Delete,
   Param,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   createGateWayDto,
@@ -75,6 +76,7 @@ export class GatewayController {
   ) {
     const sDate: string = new Date(body.startDate).toISOString().split('T')[0];
     const eDate: string = new Date(body.endDate).toISOString().split('T')[0];
+    if (sDate > eDate) throw new BadRequestException('Bad date range');
     const data = await this.gateWayService.getHumidity(body.id, sDate, eDate);
     return data;
   }
@@ -86,6 +88,7 @@ export class GatewayController {
   ) {
     const sDate: string = new Date(body.startDate).toISOString().split('T')[0];
     const eDate: string = new Date(body.endDate).toISOString().split('T')[0];
+    if (sDate > eDate) throw new BadRequestException('Bad date range');
     const data = await this.gateWayService.getTemperature(
       body.id,
       sDate,
