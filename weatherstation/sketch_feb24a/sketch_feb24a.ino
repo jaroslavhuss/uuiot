@@ -6,9 +6,8 @@ DHT dht(DHTPIN, DHTTYPE);
 float hum;
 float temp;
 
-// Get rid of fakin delay
 unsigned long previousMillis = 0;
-const long interval = 60000; // A fakin minute
+const long interval = 60000;
 
 void setup()
 {
