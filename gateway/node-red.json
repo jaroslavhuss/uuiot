@@ -86,7 +86,7 @@
     "method": "POST",
     "ret": "obj",
     "paytoqs": "ignore",
-    "url": "http://10.0.1.40:5001/auth/gateway-signin",
+    "url": "https://vpsli4228.a24vps.com/uuiot/auth/gateway-signin",
     "tls": "",
     "persist": false,
     "proxy": "",
@@ -140,7 +140,7 @@
     "type": "function",
     "z": "19b9be357f301b73",
     "name": "setTokenToGlobal()",
-    "func": "flow.set(\"gateway_access_token\", msg.payload.gateway_access_token);\nmsg.payload = {}\nreturn msg;\n",
+    "func": "flow.set(\"gateway_access_token\", msg.payload.gateway_access_token);\n\nconst date = new Date().toLocaleDateString(\"cs-CZ\")+\" \"+ new Date().toLocaleTimeString(\"cs-CZ\");\nflow.set(\"last_success\", date);\nmsg.payload = {}\nreturn msg;\n",
     "outputs": 1,
     "noerr": 0,
     "initialize": "",
@@ -180,7 +180,7 @@
     "method": "POST",
     "ret": "obj",
     "paytoqs": "ignore",
-    "url": "http://10.0.1.40:5001/gateway/save/humidity",
+    "url": "https://vpsli4228.a24vps.com/uuiot/gateway/save/humidity",
     "tls": "",
     "persist": false,
     "proxy": "",
@@ -339,7 +339,7 @@
     "payload": "[]",
     "payloadType": "json",
     "x": 110,
-    "y": 1740,
+    "y": 2740,
     "wires": [["3c57df8ded7c92dd"]]
   },
   {
@@ -352,7 +352,7 @@
     "output": "toArray",
     "name": "getHumidityValuesFromDb()",
     "x": 300,
-    "y": 1740,
+    "y": 2740,
     "wires": [["e82088631953d445"]]
   },
   {
@@ -367,7 +367,7 @@
     "multi": true,
     "operation": "update",
     "x": 850,
-    "y": 1740,
+    "y": 2740,
     "wires": []
   },
   {
@@ -387,7 +387,7 @@
       }
     ],
     "x": 590,
-    "y": 1740,
+    "y": 2740,
     "wires": [["19e40d56567dceb8"]]
   },
   {
@@ -408,7 +408,7 @@
     "payload": "[]",
     "payloadType": "json",
     "x": 150,
-    "y": 1340,
+    "y": 2340,
     "wires": [["ed444beb57e5a19d"]]
   },
   {
@@ -421,7 +421,7 @@
     "output": "toArray",
     "name": "getHumidityValuesFromDb()",
     "x": 420,
-    "y": 1340,
+    "y": 2340,
     "wires": [["612e43e6c0593124"]]
   },
   {
@@ -437,7 +437,7 @@
     "statusVal": "",
     "statusType": "auto",
     "x": 650,
-    "y": 1340,
+    "y": 2340,
     "wires": []
   },
   {
@@ -447,7 +447,7 @@
     "name": "TESTING SUB_FLOWS",
     "info": "For each there is a collection",
     "x": 140,
-    "y": 1200,
+    "y": 2200,
     "wires": []
   },
   {
@@ -457,7 +457,7 @@
     "name": "Reverts \"wasSent\" back to false for all objects!",
     "info": "For each there is a collection",
     "x": 220,
-    "y": 1700,
+    "y": 2700,
     "wires": [],
     "icon": "node-red/alert.svg"
   },
@@ -468,7 +468,7 @@
     "name": "Gets all Humidity values",
     "info": "For each there is a collection",
     "x": 150,
-    "y": 1300,
+    "y": 2300,
     "wires": []
   },
   {
@@ -506,7 +506,7 @@
     "method": "POST",
     "ret": "obj",
     "paytoqs": "ignore",
-    "url": "http://10.0.1.40:5001/gateway/save/temperature",
+    "url": "https://vpsli4228.a24vps.com/uuiot/gateway/save/temperature",
     "tls": "",
     "persist": false,
     "proxy": "",
@@ -623,7 +623,7 @@
     "payload": "[]",
     "payloadType": "json",
     "x": 160,
-    "y": 1440,
+    "y": 2440,
     "wires": [["43f12d7250f79d87"]]
   },
   {
@@ -634,9 +634,9 @@
     "collection": "temperature",
     "operation": "find",
     "output": "toArray",
-    "name": "getHumidityValuesFromDb()",
-    "x": 420,
-    "y": 1440,
+    "name": "getTemperatureValuesFromDb()",
+    "x": 430,
+    "y": 2440,
     "wires": [["820f655b301d68a2"]]
   },
   {
@@ -652,7 +652,7 @@
     "statusVal": "",
     "statusType": "auto",
     "x": 650,
-    "y": 1440,
+    "y": 2440,
     "wires": []
   },
   {
@@ -662,7 +662,7 @@
     "name": "Gets all Temperature values",
     "info": "For each there is a collection",
     "x": 160,
-    "y": 1400,
+    "y": 2400,
     "wires": []
   },
   {
@@ -672,7 +672,7 @@
     "name": "TESTING SUB_FLOWS",
     "info": "For each there is a collection",
     "x": 340,
-    "y": 1200,
+    "y": 2200,
     "wires": []
   },
   {
@@ -682,7 +682,7 @@
     "name": "TESTING SUB_FLOWS",
     "info": "For each there is a collection",
     "x": 540,
-    "y": 1200,
+    "y": 2200,
     "wires": []
   },
   {
@@ -692,7 +692,7 @@
     "name": "TESTING SUB_FLOWS",
     "info": "For each there is a collection",
     "x": 740,
-    "y": 1200,
+    "y": 2200,
     "wires": []
   },
   {
@@ -702,7 +702,7 @@
     "name": "TESTING SUB_FLOWS",
     "info": "For each there is a collection",
     "x": 940,
-    "y": 1200,
+    "y": 2200,
     "wires": []
   },
   {
@@ -863,7 +863,7 @@
     "payload": "{\"wasSent\":false}",
     "payloadType": "json",
     "x": 230,
-    "y": 1540,
+    "y": 2540,
     "wires": [["bee1b7d7bfce1485"]]
   },
   {
@@ -875,7 +875,7 @@
     "collection": "temperature",
     "operation": "find",
     "x": 570,
-    "y": 1540,
+    "y": 2540,
     "wires": [["11afdc0e6fe5d5dd"]]
   },
   {
@@ -891,7 +891,7 @@
     "statusVal": "",
     "statusType": "auto",
     "x": 810,
-    "y": 1540,
+    "y": 2540,
     "wires": []
   },
   {
@@ -901,7 +901,7 @@
     "name": "Finds all temperature values where wasSent is false",
     "info": "For each there is a collection",
     "x": 230,
-    "y": 1500,
+    "y": 2500,
     "wires": []
   },
   {
@@ -922,7 +922,7 @@
     "payload": "{\"wasSent\":false}",
     "payloadType": "json",
     "x": 220,
-    "y": 1640,
+    "y": 2640,
     "wires": [["66d0d76cc08349e4"]]
   },
   {
@@ -934,7 +934,7 @@
     "collection": "temperature",
     "operation": "find",
     "x": 560,
-    "y": 1640,
+    "y": 2640,
     "wires": [["f7da96dbe1faf2b7"]]
   },
   {
@@ -950,7 +950,7 @@
     "statusVal": "",
     "statusType": "auto",
     "x": 810,
-    "y": 1640,
+    "y": 2640,
     "wires": []
   },
   {
@@ -960,8 +960,454 @@
     "name": "Finds all humidity values where wasSent is false",
     "info": "For each there is a collection",
     "x": 220,
-    "y": 1600,
+    "y": 2600,
     "wires": []
+  },
+  {
+    "id": "3ca073a535b87e3d",
+    "type": "comment",
+    "z": "19b9be357f301b73",
+    "name": "Dashboard components",
+    "info": "Dashboard components",
+    "x": 130,
+    "y": 1200,
+    "wires": []
+  },
+  {
+    "id": "068e933c642c4c5a",
+    "type": "mongodb4",
+    "z": "19b9be357f301b73",
+    "clientNode": "5e1c14f38121ceb0",
+    "collection": "humidity",
+    "operation": "find",
+    "output": "toArray",
+    "name": "getHumidityValuesFromDb()",
+    "x": 320,
+    "y": 1380,
+    "wires": [["528a117f984ea0cb", "e3240143f333166e", "7a4f36b6764d421e"]]
+  },
+  {
+    "id": "ac15a04a53adef59",
+    "type": "inject",
+    "z": "19b9be357f301b73",
+    "name": "",
+    "props": [
+      {
+        "p": "payload"
+      }
+    ],
+    "repeat": "10",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "[]",
+    "payloadType": "jsonata",
+    "x": 90,
+    "y": 1380,
+    "wires": [["068e933c642c4c5a", "10f3b6f491c84977"]]
+  },
+  {
+    "id": "528a117f984ea0cb",
+    "type": "function",
+    "z": "19b9be357f301b73",
+    "name": "getHumidityLength()",
+    "func": "const length = msg.payload.length;\nmsg.payload = length;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 560,
+    "y": 1280,
+    "wires": [["1e37b38dfa43a17c"]]
+  },
+  {
+    "id": "1e37b38dfa43a17c",
+    "type": "ui_text",
+    "z": "19b9be357f301b73",
+    "group": "41c66548fc70995d",
+    "order": 0,
+    "width": 0,
+    "height": 0,
+    "name": "",
+    "label": "Celkový počet záznamů VLHKOSTI v lokální DB",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "className": "",
+    "x": 940,
+    "y": 1280,
+    "wires": []
+  },
+  {
+    "id": "10f3b6f491c84977",
+    "type": "mongodb4",
+    "z": "19b9be357f301b73",
+    "clientNode": "5e1c14f38121ceb0",
+    "collection": "temperature",
+    "operation": "find",
+    "output": "toArray",
+    "name": "getTemperatureValuesFromDb()",
+    "x": 330,
+    "y": 1460,
+    "wires": [["21e2d03c25f43199", "704370920c30557e", "dc3d1ce46cd232ea"]]
+  },
+  {
+    "id": "21e2d03c25f43199",
+    "type": "function",
+    "z": "19b9be357f301b73",
+    "name": "getTemperatureLength()",
+    "func": "const length = msg.payload.length;\nmsg.payload = length;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 590,
+    "y": 1460,
+    "wires": [["12dc3cf7ca4f25ee"]]
+  },
+  {
+    "id": "12dc3cf7ca4f25ee",
+    "type": "ui_text",
+    "z": "19b9be357f301b73",
+    "group": "41c66548fc70995d",
+    "order": 0,
+    "width": 0,
+    "height": 0,
+    "name": "",
+    "label": "Celkový počet záznamů TEPLOTY v lokální DB",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "className": "",
+    "x": 900,
+    "y": 1460,
+    "wires": []
+  },
+  {
+    "id": "e3240143f333166e",
+    "type": "function",
+    "z": "19b9be357f301b73",
+    "name": "getHumidityWasSentTrueLength()",
+    "func": "const wasSentTrue = msg.payload.filter((o)=>(o.wasSent === true))\nmsg.payload = wasSentTrue.length;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 600,
+    "y": 1320,
+    "wires": [["a6f801d3a1d1eef0"]]
+  },
+  {
+    "id": "a6f801d3a1d1eef0",
+    "type": "ui_text",
+    "z": "19b9be357f301b73",
+    "group": "41c66548fc70995d",
+    "order": 0,
+    "width": 0,
+    "height": 0,
+    "name": "",
+    "label": "Počet záznamů VLHKOSTI , které již byly odeslány na cloud",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "className": "",
+    "x": 980,
+    "y": 1320,
+    "wires": []
+  },
+  {
+    "id": "7a4f36b6764d421e",
+    "type": "function",
+    "z": "19b9be357f301b73",
+    "name": "getHumidityWasSentFalseLength()",
+    "func": "const wasSentTrue = msg.payload.filter((o)=>{return o.wasSent === false})\nmsg.payload = wasSentTrue.length;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 600,
+    "y": 1360,
+    "wires": [["caf5311b1918f996"]]
+  },
+  {
+    "id": "caf5311b1918f996",
+    "type": "ui_text",
+    "z": "19b9be357f301b73",
+    "group": "41c66548fc70995d",
+    "order": 0,
+    "width": 0,
+    "height": 0,
+    "name": "",
+    "label": "Počet záznamů VLHKOSTI , které ještě nebyly odeslány na cloud!",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "className": "",
+    "x": 1000,
+    "y": 1360,
+    "wires": []
+  },
+  {
+    "id": "704370920c30557e",
+    "type": "function",
+    "z": "19b9be357f301b73",
+    "name": "getHumidityWasSentTrueLength()",
+    "func": "const wasSentTrue = msg.payload.filter((o)=>(o.wasSent === true))\nmsg.payload = wasSentTrue.length;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 620,
+    "y": 1500,
+    "wires": [["455dfd02817c2b06"]]
+  },
+  {
+    "id": "455dfd02817c2b06",
+    "type": "ui_text",
+    "z": "19b9be357f301b73",
+    "group": "41c66548fc70995d",
+    "order": 0,
+    "width": 0,
+    "height": 0,
+    "name": "",
+    "label": "Počet záznamů TEPLOTY , které již byly odeslány na cloud",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "className": "",
+    "x": 1000,
+    "y": 1500,
+    "wires": []
+  },
+  {
+    "id": "dc3d1ce46cd232ea",
+    "type": "function",
+    "z": "19b9be357f301b73",
+    "name": "getHumidityWasSentFalseLength()",
+    "func": "const wasSentTrue = msg.payload.filter((o)=>{return o.wasSent === false})\nmsg.payload = wasSentTrue.length;\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 620,
+    "y": 1540,
+    "wires": [["fb46be5cbbf174cc"]]
+  },
+  {
+    "id": "fb46be5cbbf174cc",
+    "type": "ui_text",
+    "z": "19b9be357f301b73",
+    "group": "41c66548fc70995d",
+    "order": 0,
+    "width": 0,
+    "height": 0,
+    "name": "",
+    "label": "Počet záznamů TEPLOTY, které ještě nebyly odeslány na cloud!",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "className": "",
+    "x": 1010,
+    "y": 1540,
+    "wires": []
+  },
+  {
+    "id": "ab83d796b169752a",
+    "type": "inject",
+    "z": "19b9be357f301b73",
+    "name": "",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "60",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payload": "[]",
+    "payloadType": "jsonata",
+    "x": 90,
+    "y": 1680,
+    "wires": [["d221b9ae59036ac2", "edee3d20fdd36a92", "d7e4b49e9eaafdee"]]
+  },
+  {
+    "id": "d221b9ae59036ac2",
+    "type": "mongodb4",
+    "z": "19b9be357f301b73",
+    "clientNode": "5e1c14f38121ceb0",
+    "collection": "humidity",
+    "operation": "find",
+    "output": "toArray",
+    "name": "getHumidityValuesFromDb()",
+    "x": 320,
+    "y": 1680,
+    "wires": [["3276e875b72f72ed"]]
+  },
+  {
+    "id": "3276e875b72f72ed",
+    "type": "function",
+    "z": "19b9be357f301b73",
+    "name": "getLastHumidityValue()",
+    "func": "const lastValue = msg.payload[msg.payload.length - 1].humidity;\nmsg.payload = lastValue;\nmsg.topic = \"Humidity\";\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 610,
+    "y": 1680,
+    "wires": [["a1181b1f62dc1a88"]]
+  },
+  {
+    "id": "a1181b1f62dc1a88",
+    "type": "ui_chart",
+    "z": "19b9be357f301b73",
+    "name": "",
+    "group": "41c66548fc70995d",
+    "order": 6,
+    "width": 0,
+    "height": 0,
+    "label": "Humidity - vlhkost",
+    "chartType": "line",
+    "legend": "false",
+    "xformat": "HH:mm:ss",
+    "interpolate": "linear",
+    "nodata": "",
+    "dot": false,
+    "ymin": "",
+    "ymax": "",
+    "removeOlder": 1,
+    "removeOlderPoints": "",
+    "removeOlderUnit": "3600",
+    "cutout": 0,
+    "useOneColor": false,
+    "useUTC": false,
+    "colors": [
+      "#1f77b4",
+      "#aec7e8",
+      "#ff7f0e",
+      "#2ca02c",
+      "#98df8a",
+      "#d62728",
+      "#ff9896",
+      "#9467bd",
+      "#c5b0d5"
+    ],
+    "outputs": 1,
+    "useDifferentColor": false,
+    "className": "",
+    "x": 870,
+    "y": 1680,
+    "wires": [[]]
+  },
+  {
+    "id": "edee3d20fdd36a92",
+    "type": "mongodb4",
+    "z": "19b9be357f301b73",
+    "clientNode": "5e1c14f38121ceb0",
+    "collection": "temperature",
+    "operation": "find",
+    "output": "toArray",
+    "name": "getTemperatureValuesFromDb()",
+    "x": 330,
+    "y": 1760,
+    "wires": [["8447e9f5e0ca19ab"]]
+  },
+  {
+    "id": "8447e9f5e0ca19ab",
+    "type": "function",
+    "z": "19b9be357f301b73",
+    "name": "getLastTemperatureValue()",
+    "func": "const lastValue = msg.payload[msg.payload.length - 1].temperature;\nmsg.payload = lastValue;\nmsg.topic = \"Temperature\";\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 640,
+    "y": 1760,
+    "wires": [["5da2a0cdd3bd829f"]]
+  },
+  {
+    "id": "5da2a0cdd3bd829f",
+    "type": "ui_chart",
+    "z": "19b9be357f301b73",
+    "name": "",
+    "group": "41c66548fc70995d",
+    "order": 6,
+    "width": 0,
+    "height": 0,
+    "label": "Temperature - Teplota",
+    "chartType": "line",
+    "legend": "false",
+    "xformat": "HH:mm:ss",
+    "interpolate": "linear",
+    "nodata": "",
+    "dot": false,
+    "ymin": "",
+    "ymax": "",
+    "removeOlder": 1,
+    "removeOlderPoints": "",
+    "removeOlderUnit": "3600",
+    "cutout": 0,
+    "useOneColor": false,
+    "useUTC": false,
+    "colors": [
+      "#1f77b4",
+      "#aec7e8",
+      "#ff7f0e",
+      "#2ca02c",
+      "#98df8a",
+      "#d62728",
+      "#ff9896",
+      "#9467bd",
+      "#c5b0d5"
+    ],
+    "outputs": 1,
+    "useDifferentColor": false,
+    "className": "",
+    "x": 900,
+    "y": 1760,
+    "wires": [[]]
+  },
+  {
+    "id": "90357f6674c70370",
+    "type": "ui_text",
+    "z": "19b9be357f301b73",
+    "group": "41c66548fc70995d",
+    "order": 8,
+    "width": 0,
+    "height": 0,
+    "name": "",
+    "label": "Naposledy odeslaná data",
+    "format": "{{msg.payload}}",
+    "layout": "row-spread",
+    "className": "",
+    "x": 590,
+    "y": 1860,
+    "wires": []
+  },
+  {
+    "id": "d7e4b49e9eaafdee",
+    "type": "function",
+    "z": "19b9be357f301b73",
+    "name": "getLastSentDate()",
+    "func": "msg.payload = flow.get(\"last_success\");\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 290,
+    "y": 1860,
+    "wires": [["90357f6674c70370"]]
   },
   {
     "id": "627510a29e1feb98",
@@ -1006,5 +1452,24 @@
     "uri": "",
     "advanced": "",
     "uriTabActive": "tab-uri-simple"
+  },
+  {
+    "id": "41c66548fc70995d",
+    "type": "ui_group",
+    "name": "uuIOT - Měření teploty a vlhkosti",
+    "tab": "199fecdc0cae80d2",
+    "order": 1,
+    "disp": true,
+    "width": "6",
+    "collapse": false,
+    "className": ""
+  },
+  {
+    "id": "199fecdc0cae80d2",
+    "type": "ui_tab",
+    "name": "Home",
+    "icon": "dashboard",
+    "disabled": false,
+    "hidden": false
   }
 ]
