@@ -12,5 +12,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./tokens.type"), exports);
 __exportStar(require("./jwtPayload.type"), exports);
-__exportStar(require("./jwtPayloadWithRt.type"), exports);
+__exportStar(require("./JwtPayloadWithRt.type"), exports);
 //# sourceMappingURL=index.js.map
