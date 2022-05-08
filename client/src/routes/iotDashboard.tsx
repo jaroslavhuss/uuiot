@@ -107,18 +107,21 @@ const StudentsDashboard = () => {
 
             const humidityData: IHumidity[] = await responseHumidity.json();
             const temperatureData: ITemperature[] = await responseTemperature.json();
-            humidityData.forEach((h) => {
-                const niceDate = new Date(h.date).toLocaleDateString() + " " + new Date(h.date).toLocaleTimeString();
-                h.date = niceDate;
-                h.humidity = parseFloat(h.humidity.toFixed(1));
-            })
             setHumidity(humidityData)
-            temperatureData.forEach((h: ITemperature) => {
-                const niceDate = new Date(h.date).toLocaleDateString() + " " + new Date(h.date).toLocaleTimeString();
-                h.date = niceDate;
-                h.temperature = parseFloat(h.temperature.toFixed(1));
-            })
             setTemperature(temperatureData);
+
+            // humidityData.forEach((h) => {
+            //     const niceDate = new Date(h.date).toLocaleDateString() + " " + new Date(h.date).toLocaleTimeString();
+            //     h.date = niceDate;
+            //     h.humidity = parseFloat(h.humidity.toFixed(1));
+            // })
+
+            // temperatureData.forEach((h: ITemperature) => {
+            //     const niceDate = new Date(h.date).toLocaleDateString() + " " + new Date(h.date).toLocaleTimeString();
+            //     h.date = niceDate;
+            //     h.temperature = parseFloat(h.temperature.toFixed(1));
+            // })
+
             setIsLoading(false);
         } catch (error) {
             setIsLoading(false)
@@ -168,52 +171,52 @@ const StudentsDashboard = () => {
 
                     <div className="gwData">
                         <div style={{ width: '100%', marginTop: 20 }}>
-                            <React.Suspense fallback="<div>Loading</div>">
-                                {temperature.length > 0 &&
-                                    <>
-                                        <h3>Teplota</h3>
-                                        <ResponsiveContainer width="100%" height={200}>
-                                            <LineChart
-                                                width={500}
-                                                height={200}
-                                                data={temperature}
-                                                margin={{
-                                                    top: 10,
-                                                    right: 30,
-                                                    left: 0,
-                                                    bottom: 0,
-                                                }}
-                                            >
-                                                <CartesianGrid strokeDasharray="3 3" />
-                                                <XAxis dataKey="date" style={{ fontSize: 8 }} />
-                                                <YAxis />
-                                                <Tooltip />
-                                                <Line connectNulls name="Teplota" type="monotone" dataKey="temperature" stroke="#8884d8" fill="#8884d8" />
-                                            </LineChart>
-                                        </ResponsiveContainer>
-                                        <h3>Vlhkost</h3>
-                                        <ResponsiveContainer width="100%" height={200}>
-                                            <LineChart
-                                                width={500}
-                                                height={200}
-                                                data={humidity}
-                                                margin={{
-                                                    top: 10,
-                                                    right: 30,
-                                                    left: 0,
-                                                    bottom: 0,
-                                                }}
-                                            >
-                                                <CartesianGrid strokeDasharray="3 3" />
-                                                <XAxis dataKey="date" style={{ fontSize: 8 }} />
-                                                <YAxis />
-                                                <Tooltip />
-                                                <Line connectNulls name="vlhkost" type="monotone" dataKey="humidity" stroke="#8884d8" fill="#8884d8" />
-                                            </LineChart>
-                                        </ResponsiveContainer>
-                                    </>
-                                }
-                            </React.Suspense>
+
+                            {temperature.length > 0 &&
+                                <>
+                                    <h3>Teplota</h3>
+                                    <ResponsiveContainer width="100%" height={200}>
+                                        <LineChart
+                                            width={500}
+                                            height={200}
+                                            data={temperature}
+                                            margin={{
+                                                top: 10,
+                                                right: 30,
+                                                left: 0,
+                                                bottom: 0,
+                                            }}
+                                        >
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="date" style={{ fontSize: 8 }} />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Line connectNulls name="Teplota" type="monotone" dataKey="temperature" stroke="#8884d8" fill="#8884d8" />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                    <h3>Vlhkost</h3>
+                                    <ResponsiveContainer width="100%" height={200}>
+                                        <LineChart
+                                            width={500}
+                                            height={200}
+                                            data={humidity}
+                                            margin={{
+                                                top: 10,
+                                                right: 30,
+                                                left: 0,
+                                                bottom: 0,
+                                            }}
+                                        >
+                                            <CartesianGrid strokeDasharray="3 3" />
+                                            <XAxis dataKey="date" style={{ fontSize: 8 }} />
+                                            <YAxis />
+                                            <Tooltip />
+                                            <Line connectNulls name="vlhkost" type="monotone" dataKey="humidity" stroke="#8884d8" fill="#8884d8" />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                </>
+                            }
+
                         </div>
                     </div>
                 </>}
