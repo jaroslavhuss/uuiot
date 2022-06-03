@@ -18,7 +18,7 @@ export const authSlice = createSlice({
       state.subjects = action.payload.subjects;
     },
     authUserFailed: (state) => {
-      localStorage.removeItem("token");
+     // localStorage.removeItem("token");
       state.isAuthenticated = false;
       state.token = null;
       state.loading = true;

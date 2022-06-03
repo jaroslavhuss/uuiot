@@ -1,10 +1,12 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AppBar from "../molecules/AppBar";
 import { Lang } from "../langauges/Dictionary"
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { GLOBAL_URL } from '../GLOBAL_URL'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { fetchAPI } from "../utils/FetchAPI";
+import { FetchMethods } from "../interface/methods.enum";
+import { setError } from "../store/reducers/errorReducer";
 
 interface GateWayCreateInterface {
     name: string;
@@ -33,6 +35,7 @@ interface ITemperature {
 
 const StudentsDashboard = () => {
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const authState = useSelector((data: any) => { return data.auth })
     const lang = useSelector((data: any) => { return data.language.language })
     const [listOfGateways, setListOfGateways] = useState<GateWayCreateInterface[]>([])
@@ -45,17 +48,13 @@ const StudentsDashboard = () => {
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const getAllGateways = async () => {
-
-        const token: string | null = localStorage.getItem("token");
-        const response: Response = await fetch(`${GLOBAL_URL}/gateway/all/`, {
-            method: "GET",
-            headers: {
-                "Content-type": "application/json",
-                Authorization: `Bearer ${token}`,
-            }
-        })
-        const data: GateWayCreateInterface[] = await response.json();
+try {
+    const data:GateWayCreateInterface[] = await fetchAPI("/gateway/all/", FetchMethods.GET)
         setListOfGateways(data);
+} catch (error:any) {
+    dispatch(setError(error.message))
+}
+        
     }
 
     useEffect(() => {
@@ -78,52 +77,34 @@ const StudentsDashboard = () => {
     const getDataFromGW = async (id: string, start: Date, end: Date) => {
         setIsLoading(true);
         try {
-            const token: string | null = localStorage.getItem("token");
-
-            const responseHumidity: Response = await fetch(`${GLOBAL_URL}/gateway/data/humidity/`, {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    id,
-                    startDate,
-                    endDate
-                })
+            const humidityData:IHumidity[] = await fetchAPI("/gateway/data/humidity/", FetchMethods.POST, {
+                id,
+                startDate,
+                endDate 
             })
-            const responseTemperature: Response = await fetch(`${GLOBAL_URL}/gateway/data/temperature/`, {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    id,
-                    startDate,
-                    endDate
-                })
+            const temperatureData:ITemperature[] = await fetchAPI("/gateway/data/temperature/", FetchMethods.POST, {
+                id,
+                startDate,
+                endDate 
+            })
+           
+            humidityData.forEach((h) => {
+                const niceDate = new Date(h.date).toLocaleDateString() + " " + new Date(h.date).toLocaleTimeString();
+                h.date = niceDate;
+                h.humidity = parseFloat(h.humidity.toFixed(1));
             })
 
-            const humidityData: IHumidity[] = await responseHumidity.json();
-            const temperatureData: ITemperature[] = await responseTemperature.json();
+            temperatureData.forEach((h: ITemperature) => {
+                const niceDate = new Date(h.date).toLocaleDateString() + " " + new Date(h.date).toLocaleTimeString();
+                h.date = niceDate;
+                h.temperature = parseFloat(h.temperature.toFixed(1));
+            })
+
             setHumidity(humidityData)
             setTemperature(temperatureData);
-
-            // humidityData.forEach((h) => {
-            //     const niceDate = new Date(h.date).toLocaleDateString() + " " + new Date(h.date).toLocaleTimeString();
-            //     h.date = niceDate;
-            //     h.humidity = parseFloat(h.humidity.toFixed(1));
-            // })
-
-            // temperatureData.forEach((h: ITemperature) => {
-            //     const niceDate = new Date(h.date).toLocaleDateString() + " " + new Date(h.date).toLocaleTimeString();
-            //     h.date = niceDate;
-            //     h.temperature = parseFloat(h.temperature.toFixed(1));
-            // })
-
             setIsLoading(false);
-        } catch (error) {
+        } catch (error:any) {
+            dispatch(setError(error.message))
             setIsLoading(false)
         }
 
