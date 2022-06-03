@@ -22,15 +22,15 @@ let UserService = class UserService {
         this.userModel = userModel;
     }
     async updateUser(id, attrs) {
-        const user = await this.userModel.findOneAndUpdate({ _id: id }, Object.assign({}, attrs), { new: true });
+        const user = await this.userModel.findOneAndUpdate({ _id: id }, Object.assign({}, attrs), { new: true }).select("-password");
         return user;
     }
     async deleteUser(id) {
-        const user = await this.userModel.findByIdAndDelete(id);
+        const user = await this.userModel.findByIdAndDelete(id).select("-password");
         return user;
     }
     async getAllUsers() {
-        const users = await this.userModel.find({});
+        const users = await this.userModel.find({}).select("-password");
         return users;
     }
 };

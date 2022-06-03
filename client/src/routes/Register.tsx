@@ -4,11 +4,13 @@ import { useState, useEffect } from "react";
 import validator from "validator";
 import { authUserFailed, authUserSuccess } from "../store/reducers/auth";
 import { Link, useNavigate } from "react-router-dom";
-import FormErrors from "../atoms/forms/FormErrors";
+
 import LanguageSwitch from "../atoms/forms/LanguageSwitch";
 import FormSelect from "../atoms/forms/FormSelect";
 import { UserInterface } from "../interface/UserInterface";
-import { GLOBAL_URL } from "../GLOBAL_URL";
+import { fetchAPI } from "../utils/FetchAPI";
+import { setError } from "../store/reducers/errorReducer";
+import { FetchMethods } from "../interface/methods.enum";
 const Register = () => {
     const navigate = useNavigate();
     const lang = useSelector((data: any) => { return data.language.language })
@@ -18,64 +20,52 @@ const Register = () => {
     const [email, setEmail] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [confirmedPassword, setConfirmedPassword] = useState<string>("")
-    const [errorMessage, setErrorMessage] = useState<string>("");
-    const [errorStatus, setErrorStatus] = useState<boolean>(true);
 
     const dispatch = useDispatch();
     const authState = useSelector((data: any) => { return data.auth; })
 
 
     useEffect(() => {
-        console.log(authState)
         if (authState.isAuthenticated) { navigate("/login") }
     }, [authState, navigate]);
     const submitForm = async (e: any) => {
         e.preventDefault();
         if (name === "" && surname === "" && prefferedLanguage === "") {
-            setErrorMessage("All fields are mandatory")
-            setErrorStatus(false)
+            dispatch(setError("All fields are mandatory"))
             dispatch(authUserFailed())
         }
         else if (password !== confirmedPassword) {
-            setErrorMessage("Passwords does not match!")
-            setErrorStatus(false)
+            dispatch(setError("Passwords does not match!"))
             dispatch(authUserFailed())
         }
         else if (!validator.isEmail(email)) {
-            setErrorMessage("Email is missing or this is invalid email")
-            setErrorStatus(false)
+            dispatch(setError("Email is missing or this is invalid email"))
             dispatch(authUserFailed())
         }
         else {
             try {
-                const response: Response = await fetch(GLOBAL_URL + "/auth/signup", {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    method: "post",
-                    body: JSON.stringify({
-                        name,
-                        surname,
-                        language: prefferedLanguage,
-                        email,
-                        password,
-                        confirmedPassword
-                    })
-                })
-                const data: { access_token: string, user: UserInterface, statusCode: number, message: string, error: string } = await response.json();
+                const data: UserInterface = await fetchAPI("/auth/signup", FetchMethods.POST, {
+                    name,
+                    surname,
+                    language: prefferedLanguage,
+                    email,
+                    password,
+                    confirmedPassword
+                });
+               
                 if (data.error) throw new Error(`${data.statusCode} - ${data.error} - ${data.message}`)
-                if (!data.user.isUserApproved) {
-                    navigate("/login")
-                    throw new Error("User was not verified yet!")
-                }
-                localStorage.setItem("token", data.access_token);
-                dispatch(authUserSuccess({ token: data.access_token, user: data.user }));
+                if(!data.isUserApproved) throw new Error("User was not approved yet!")
+                localStorage.setItem("token", data.tokens.access_token);
+                dispatch(authUserSuccess({ token: data.tokens.access_token, user: data.user }));
                 navigate("/dashboard")
-            } catch (error) {
-                setErrorStatus(false);
-                //@ts-ignore
-                setErrorMessage(error.message)
+            } catch (error:any) {
+                dispatch(setError(error.message))
                 dispatch(authUserFailed())
+                if(error.message.match("User was not approved yet!")){
+                    navigate("/login")
+                }else{
+                    navigate("/registration")
+                }
             }
         }
     };
@@ -160,7 +150,7 @@ const Register = () => {
 
                     <input className="btn btn-dark" type="submit" value={Lang.submitBtnRegister[lang]} />
                 </div>
-                {!errorStatus && <FormErrors error={errorMessage} ></FormErrors>}
+              
             </form>
             <Link to="/login"><button className="btn btn-danger" type="submit">{Lang.backBtnRegister[lang]}</button></Link>
             {/* ERRORS */}

@@ -10,8 +10,11 @@ import { useNavigate, Link } from "react-router-dom";
 import FormErrors from "../atoms/forms/FormErrors";
 import LanguageSwitch from "../atoms/forms/LanguageSwitch";
 import { UserInterface } from "../interface/UserInterface";
-import { GLOBAL_URL } from "../GLOBAL_URL";
 
+
+import { fetchAPI } from "../utils/FetchAPI";
+import { FetchMethods } from "../interface/methods.enum";
+import { setError } from "../store/reducers/errorReducer";
 const Login = () => {
     /**
      * CONST
@@ -48,21 +51,13 @@ const Login = () => {
         }
         else {
             try {
-                const response: Response = await fetch(GLOBAL_URL + "/auth/signin", {
-                    headers: { 'Content-Type': 'application/json' },
-                    method: "post",
-                    body: JSON.stringify({ email, password })
-                })
-                const data: { tokens: { access_token: string, refresh_token: string }, user: UserInterface, message: string } = await response.json();
-                if (!data.tokens.access_token) throw new Error(data.message);
-                if (!data.user) throw new Error("Could not fetch user's data")
-                if (!data.user.isUserApproved) throw new Error("User was not verified yet!")
+                const data:UserInterface = 
+                await fetchAPI("/auth/signin", FetchMethods.POST, {email, password});
+                if(data.error)throw new Error(`${data.message} | ${data.error} ${data.statusCode}`);
                 localStorage.setItem("token", data.tokens.access_token);
                 dispatch(authUserSuccess({ token: data.tokens.access_token, user: data.user }));
             } catch (error: any) {
-                setErrorStatus(false);
-                setErrorMessage(error.message)
-                localStorage.removeItem("token");
+                dispatch(setError(error.message))
                 dispatch(authUserFailed())
             }
         }

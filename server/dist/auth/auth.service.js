@@ -57,6 +57,8 @@ let AuthService = class AuthService {
         });
         if (!user)
             throw new common_1.ForbiddenException('This user does not exists');
+        if (!user.isUserApproved)
+            throw new common_1.ForbiddenException("User was not approved yet ");
         const passwordMatch = await argon.verify(user.password, dto.password);
         if (!passwordMatch)
             throw new common_1.BadRequestException('Wrong password');
@@ -71,7 +73,7 @@ let AuthService = class AuthService {
     async logout(id) {
         const user = await this.userModel.findByIdAndUpdate(id.id, {
             refresh_token: '',
-        }, { new: true });
+        }, { new: true }).select("-password");
         if (!user)
             throw new common_1.BadRequestException('User could not be logged off since it does not exist');
         delete user.password;

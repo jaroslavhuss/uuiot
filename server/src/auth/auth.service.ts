@@ -9,11 +9,11 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from 'src/schemas/user.schema';
+import {User, UserDocument} from "../schemas/user.schema"
 import { Model } from 'mongoose';
 
-import { GatewayLogInDto } from 'src/gateway/dto';
-import { Gateway, GatewayDocument } from 'src/schemas';
+import { GatewayLogInDto } from '../gateway/dto';
+import { Gateway, GatewayDocument } from '../schemas';
 import { Tokens } from './types';
 
 @Injectable()
@@ -62,10 +62,10 @@ export class AuthService {
     //find user by email
     const user = await this.userModel.findOne({
       email: dto.email,
-    });
+    })
 
     if (!user) throw new ForbiddenException('This user does not exists');
-
+    if (!user.isUserApproved) throw new ForbiddenException("User was not approved yet ");
     //compare passwords
     const passwordMatch: boolean = await argon.verify(
       user.password,
@@ -92,7 +92,7 @@ export class AuthService {
         refresh_token: '',
       },
       { new: true },
-    );
+    ).select("-password")
     if (!user)
       throw new BadRequestException(
         'User could not be logged off since it does not exist',

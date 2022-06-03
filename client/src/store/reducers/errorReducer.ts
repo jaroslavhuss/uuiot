@@ -22,7 +22,6 @@ export const errorSlice = createSlice<ErrorState, ErrorReducers, string>({
   },
   reducers: {
     setError: (state, action) => {
-      console.log(state, action);
       state.alerts.push({
         message: action.payload ?? "Unknown error occurred",
       });

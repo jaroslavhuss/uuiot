@@ -10,9 +10,9 @@ export declare class GatewayController {
     saveTemperature(body: GatewaySaveTemperatureDto[], gateway: any): Promise<import("@nestjs/common").InternalServerErrorException | (import("../schemas").Temperature & import("mongoose").Document<any, any, any> & {
         _id: any;
     })[]>;
-    createGateWay(dto: createGateWayDto, user: any): Promise<BadRequestException | (import("../schemas").Gateway & import("mongoose").Document<any, any, any> & {
+    createGateWay(dto: createGateWayDto, user: any): Promise<(import("../schemas").Gateway & import("mongoose").Document<any, any, any> & {
         _id: any;
-    })>;
+    }) | BadRequestException>;
     getAllGateways(): Promise<(import("../schemas").Gateway & import("mongoose").Document<any, any, any> & {
         _id: any;
     })[]>;

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User, UserDocument } from 'src/schemas/user.schema';
+import { User, UserDocument } from '../schemas/user.schema';
 import { Model } from 'mongoose';
 @Injectable()
 export class UserService {
@@ -11,17 +11,17 @@ export class UserService {
       { _id: id },
       { ...attrs },
       { new: true },
-    );
+    ).select("-password")
     return user;
   }
 
   async deleteUser(id: string) {
-    const user = await this.userModel.findByIdAndDelete(id);
-    return user;
+    const user = await this.userModel.findByIdAndDelete(id).select("-password");
+    return user
   }
 
   async getAllUsers() {
-    const users = await this.userModel.find({});
+    const users = await this.userModel.find({}).select("-password")
     return users;
   }
 }

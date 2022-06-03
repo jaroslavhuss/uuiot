@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { UserService } from './user.service';
-import { getUser } from 'src/auth/decorators';
+import { getUser } from '../auth/decorators';
 import { User } from '../schemas/user.schema';
 import { UserUpdateDto, UserDeleteDto } from './dto';
 @Controller('users')

@@ -1,7 +1,4 @@
-/// <reference types="mongoose/types/pipelinestage" />
-/// <reference types="mongoose/types/error" />
-/// <reference types="mongoose/types/connection" />
-import { User, UserDocument } from 'src/schemas/user.schema';
+import { User, UserDocument } from '../schemas/user.schema';
 import { Model } from 'mongoose';
 export declare class UserService {
     private userModel;

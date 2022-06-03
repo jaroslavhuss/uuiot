@@ -1,22 +1,17 @@
-import { GLOBAL_URL } from "../GLOBAL_URL";
 import { useDispatch } from "react-redux";
-import { ResponseInterface } from "../interface/ResponseInterface";
 import { authUserFailed, authUserSuccess } from "../store/reducers/auth";
+import { fetchAPI } from "./FetchAPI";
+import { FetchMethods } from "../interface/methods.enum";
+import { UserInterface } from "../interface/UserInterface";
 export const GlobalWatcher = async () => {
   const dispatch = useDispatch();
   try {
-    const token: string | null = localStorage.getItem("token");
-    const response: Response = await fetch(GLOBAL_URL + "/users/me", {
-      method: "get",
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data: ResponseInterface = await response.json();
+    const data: UserInterface = await fetchAPI("/users/me", FetchMethods.GET, {})
     if (data.statusCode)
       throw new Error(`${data.statusCode} - ${data.error} - ${data.message}`);
-    dispatch(authUserSuccess({ token, user: data.user }));
+
+      if(!data.isUserApproved)throw new Error("User is not approved yet!")
+    dispatch(authUserSuccess({ data:data.tokens.access_token, user: data.user }));
   } catch (error: any) {
     dispatch(authUserFailed());
   }

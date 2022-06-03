@@ -44,3 +44,26 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+## List of apis
+
+/auth/signup, POST 
+/auth/signin, POST 
+/auth/logout, POST 
+/auth/refresh, POST 
+/auth/gateway-signin, POST
+/auth, GET 
+
+/users/me, GET
+/users/admin, GET 
+/users/update/:id, PATCH 
+/users/delete/:id, DELETE
+/users/all, GET 
+
+/gateway/save/humidity, POST 
+/gateway/save/temperature, POST 
+/gateway/create, POST
+/gateway/all, GET 
+/gateway/delete/:id, DELETE 
+/gateway/data/humidity, POST 
+/gateway/data/temperature, POST 

@@ -6,7 +6,7 @@ import {
   IsBoolean,
   Validate,
 } from 'class-validator';
-import { AdminUserRoles } from 'src/custom-validators';
+import { AdminUserRoles } from "../../custom-validators"
 
 export class UserUpdateDto {
   @IsEmail()
