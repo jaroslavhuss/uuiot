@@ -36,7 +36,7 @@ let GatewayService = class GatewayService {
         return gateway;
     }
     async getAllGateways() {
-        const gateways = await this.gatewayModel.find({});
+        const gateways = await this.gatewayModel.find({}).select("-password");
         return gateways;
     }
     async deleteGateway(id) {

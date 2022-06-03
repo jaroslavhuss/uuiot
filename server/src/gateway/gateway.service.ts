@@ -48,7 +48,7 @@ export class GatewayService {
    * @returns list of all gateways
    */
   async getAllGateways() {
-    const gateways = await this.gatewayModel.find({});
+    const gateways = await this.gatewayModel.find({}).select("-password");
     return gateways;
   }
 
@@ -132,6 +132,9 @@ export class GatewayService {
           .sort({ date: 1 });
 
         if (!gwData) throw new BadRequestException('gw not found');
+
+      
+
         return gwData;
       } else if (diffDays > 0 && diffDays < 7) {
         const gwData = await this.humidityModel
