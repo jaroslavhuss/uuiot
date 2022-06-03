@@ -1,3 +1,6 @@
+/// <reference types="mongoose/types/pipelinestage" />
+/// <reference types="mongoose/types/error" />
+/// <reference types="mongoose/types/connection" />
 import { Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { User, UserDocument } from 'src/schemas/user.schema';

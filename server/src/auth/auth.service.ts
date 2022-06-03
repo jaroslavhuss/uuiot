@@ -72,16 +72,16 @@ export class AuthService {
       dto.password,
     );
     if (!passwordMatch) throw new BadRequestException('Wrong password');
+
     const tokens = await this.signToken(user._id, user.email, user.authLevel);
-    await this.userModel.findOneAndUpdate(
-      { _id: user.id },
-      { lastLoggedIn: new Date(), refresh_token: tokens.refresh_token },
-      { new: true },
-    );
-    user.password = null;
+    const {createdAt, updatedAt, email, name, surname, isUserApproved, lastLoggedIn, refresh_token, authLevel} = user;
+    const newObject = {
+      createdAt, updatedAt, email, name, surname, isUserApproved, lastLoggedIn, refresh_token, authLevel
+    }
+    console.log(newObject)
     return {
-      user,
-      tokens: await this.signToken(user.id, user.email, user.authLevel),
+      tokens,
+      user:newObject
     };
   }
 

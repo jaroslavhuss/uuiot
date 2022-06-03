@@ -26,8 +26,8 @@ let AuthController = class AuthController {
     signup(dto) {
         return this.authService.signup(dto);
     }
-    signin(dto) {
-        return this.authService.signin(dto);
+    async signin(dto) {
+        return await this.authService.signin(dto);
     }
     logout(dto) {
         return this.authService.logout(dto);
@@ -58,7 +58,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [dto_1.AuthDto]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], AuthController.prototype, "signin", null);
 __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),

@@ -28,8 +28,8 @@ export class AuthController {
 
   @Post('/signin')
   @HttpCode(HttpStatus.OK)
-  signin(@Body() dto: AuthDto) {
-    return this.authService.signin(dto);
+  async signin(@Body() dto: AuthDto) {
+    return await this.authService.signin(dto);
   }
 
   //Only logged user can call this - we need ID of the current user!
