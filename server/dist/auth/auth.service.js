@@ -67,7 +67,6 @@ let AuthService = class AuthService {
         const newObject = {
             createdAt, updatedAt, email, name, surname, isUserApproved, lastLoggedIn, refresh_token, authLevel
         };
-        console.log(newObject);
         return {
             tokens,
             user: newObject

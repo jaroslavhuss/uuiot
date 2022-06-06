@@ -1,8 +1,5 @@
-/// <reference types="mongoose/types/pipelinestage" />
-/// <reference types="mongoose/types/error" />
-/// <reference types="mongoose/types/connection" />
 import { BadRequestException, InternalServerErrorException } from '@nestjs/common';
-import { Gateway, GatewayDocument, Humidity, HumidityDocument, Temperature, TemperatureDocument } from 'src/schemas';
+import { Gateway, GatewayDocument, Humidity, HumidityDocument, Temperature, TemperatureDocument } from "../schemas";
 import { Model } from 'mongoose';
 import { createGateWayDto, GatewaySaveHumidityDto, GatewaySaveTemperatureDto } from './dto';
 export declare class GatewayService {
@@ -10,9 +7,9 @@ export declare class GatewayService {
     private humidityModel;
     private temperatureModel;
     constructor(gatewayModel: Model<GatewayDocument>, humidityModel: Model<HumidityDocument>, temperatureModel: Model<TemperatureDocument>);
-    createGateway(dto: createGateWayDto): Promise<BadRequestException | (Gateway & import("mongoose").Document<any, any, any> & {
+    createGateway(dto: createGateWayDto): Promise<(Gateway & import("mongoose").Document<any, any, any> & {
         _id: any;
-    })>;
+    }) | BadRequestException>;
     getAllGateways(): Promise<(Gateway & import("mongoose").Document<any, any, any> & {
         _id: any;
     })[]>;

@@ -50,6 +50,7 @@ const StudentsDashboard = () => {
     const getAllGateways = async () => {
 try {
     const data:GateWayCreateInterface[] = await fetchAPI("/gateway/all/", FetchMethods.GET)
+    console.log(data)
         setListOfGateways(data);
 } catch (error:any) {
     dispatch(setError(error.message))
@@ -87,17 +88,23 @@ try {
                 startDate,
                 endDate 
             })
-           
+       
             humidityData.forEach((h) => {
+                if(h.humidity !== null){
                 const niceDate = new Date(h.date).toLocaleDateString() + " " + new Date(h.date).toLocaleTimeString();
                 h.date = niceDate;
+                console.log(h.humidity)
                 h.humidity = parseFloat(h.humidity.toFixed(1));
+            }
             })
 
             temperatureData.forEach((h: ITemperature) => {
-                const niceDate = new Date(h.date).toLocaleDateString() + " " + new Date(h.date).toLocaleTimeString();
-                h.date = niceDate;
-                h.temperature = parseFloat(h.temperature.toFixed(1));
+                if(h.temperature !== null){
+                    const niceDate = new Date(h.date).toLocaleDateString() + " " + new Date(h.date).toLocaleTimeString();
+                    h.date = niceDate;
+                    h.temperature = parseFloat(h.temperature.toFixed(1));
+                }
+                
             })
 
             setHumidity(humidityData)

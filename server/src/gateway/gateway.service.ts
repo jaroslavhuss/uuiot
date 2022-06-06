@@ -11,7 +11,7 @@ import {
   HumidityDocument,
   Temperature,
   TemperatureDocument,
-} from 'src/schemas';
+} from "../schemas"
 import { Model } from 'mongoose';
 import {
   createGateWayDto,

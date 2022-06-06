@@ -1,8 +1,4 @@
 /// <reference types="node" />
-/// <reference types="mongoose/types/pipelinestage" />
-/// <reference types="mongoose/types/error" />
-/// <reference types="mongoose/types/connection" />
-/// <reference types="mongoose" />
 import { AuthService } from './auth.service';
 import { AuthDto, SignUpDto, UserIdDto } from './dto';
 import { GatewayLogInDto } from '../gateway/dto';
