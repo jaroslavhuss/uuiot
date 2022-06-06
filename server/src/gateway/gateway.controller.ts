@@ -15,7 +15,7 @@ import {
 } from './dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GatewayService } from './gateway.service';
-import { getUser } from 'src/auth/decorators';
+import { getUser } from '../auth/decorators';
 import { getGateway } from './decorators';
 @Controller('gateway')
 export class GatewayController {

@@ -1,6 +1,3 @@
-/// <reference types="mongoose/types/pipelinestage" />
-/// <reference types="mongoose/types/error" />
-/// <reference types="mongoose/types/connection" />
 import { AuthDto, SignUpDto, UserIdDto } from './dto';
 import { JwtService } from '@nestjs/jwt';
 import { User, UserDocument } from "../schemas/user.schema";

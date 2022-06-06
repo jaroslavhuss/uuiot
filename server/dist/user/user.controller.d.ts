@@ -1,7 +1,3 @@
-/// <reference types="mongoose/types/pipelinestage" />
-/// <reference types="mongoose/types/error" />
-/// <reference types="mongoose/types/connection" />
-/// <reference types="mongoose" />
 import { UserService } from './user.service';
 import { User } from '../schemas/user.schema';
 import { UserUpdateDto } from './dto';
