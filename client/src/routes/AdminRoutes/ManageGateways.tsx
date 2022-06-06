@@ -51,7 +51,7 @@ const AdminCreateGateway = () => {
         method: "POST",
         headers: {
           "Content-type": "application/json",
-          Authorization: `Bearer ${token}_dr_dick`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           name,
