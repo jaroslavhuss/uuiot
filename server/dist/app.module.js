@@ -13,12 +13,19 @@ const user_module_1 = require("./user/user.module");
 const config_1 = require("@nestjs/config");
 const mongoose_1 = require("@nestjs/mongoose");
 const gateway_module_1 = require("./gateway/gateway.module");
+const audit_logger_1 = require("./util/audit.logger");
+const audit_schema_1 = require("./schemas/audit.schema");
+const jwt_1 = require("@nestjs/jwt");
 const STAGE = 'production';
 let AppModule = class AppModule {
+    configure(consumer) {
+        consumer.apply(audit_logger_1.AuditLogger).forRoutes("*");
+    }
 };
 AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            jwt_1.JwtModule.register({}),
             auth_module_1.AuthModule,
             user_module_1.UserModule,
             mongoose_1.MongooseModule.forRootAsync({
@@ -29,6 +36,7 @@ AppModule = __decorate([
                 }),
                 inject: [config_1.ConfigService],
             }),
+            mongoose_1.MongooseModule.forFeature([{ name: audit_schema_1.Audit.name, schema: audit_schema_1.AuditSchema }]),
             config_1.ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
             gateway_module_1.GatewayModule,
         ],
