@@ -133,6 +133,7 @@ const AdminCreateGateway = () => {
       }
     }
   };
+
   useEffect(() => {
     getAllGateways();
   }, [fetchChange]);
