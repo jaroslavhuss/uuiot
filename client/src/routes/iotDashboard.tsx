@@ -177,6 +177,20 @@ const StudentsDashboard = () => {
           )}
           {!isLoading && (
             <>
+              {temperature.length > 0 && (
+                <div style={{ paddingBottom: 8 }}>
+                  Aktuální teplota: &nbsp;
+                  <span
+                    style={{
+                      backgroundColor: "hotpink",
+                      color: "white",
+                      padding: 2,
+                    }}
+                  >
+                    {temperature[temperature.length - 2].temperature}°C
+                  </span>
+                </div>
+              )}
               {gwID && (
                 <div className="dateRange">
                   From:{" "}
