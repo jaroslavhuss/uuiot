@@ -69,8 +69,13 @@ const AdminCreateGateway = () => {
           password,
         }),
       });
+
       const data: any = await response.json();
-      if (data.statusCode >= 400) throw new Error(data.message);
+
+      if (data.statusCode >= 400) {
+        throw new Error(data.message);
+      }
+
       setFetchChange(!fetchChange);
       setGatewayData({
         name: "",
@@ -115,8 +120,13 @@ const AdminCreateGateway = () => {
             },
           }
         );
+
         const data: any = await response.json();
-        if (data.error) throw new Error(data.message);
+
+        if (data.error) {
+          throw new Error(data.message);
+        }
+
         setFetchChange(!fetchChange);
       } catch (error: any) {
         dispatch(setError(error.message));
