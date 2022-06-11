@@ -13,6 +13,25 @@ interface GateWayCreateInterface {
   createdAt?: any;
   _id?: string;
 }
+
+const validateGatewayData = (data: GateWayCreateInterface) => {
+  if (!data.name) {
+    throw new Error("Unique name is missing");
+  }
+  if (!data.description) {
+    throw new Error("Description is mandatory");
+  }
+  if (!data.password) {
+    throw new Error("Password is mandatory");
+  }
+  if (!data.description) {
+    throw new Error("Description is mandatory");
+  }
+  if (data.password !== data.confirmedPassword) {
+    throw new Error("Passwords must match!");
+  }
+};
+
 const AdminCreateGateway = () => {
   const [listOfGateways, setListOfGateways] = useState<
     GateWayCreateInterface[]
@@ -29,21 +48,12 @@ const AdminCreateGateway = () => {
   const formData = (e: React.ChangeEvent<HTMLInputElement>) => {
     setGatewayData({ ...gatewayData, [e.target.name]: e.target.value });
   };
+
   const createGateWay = async (e: any) => {
     e.preventDefault();
-    const {
-      name,
-      password,
-      confirmedPassword,
-      description,
-    }: GateWayCreateInterface = gatewayData;
+    const { name, password, description }: GateWayCreateInterface = gatewayData;
     try {
-      if (!name) throw new Error("Unique name is mising");
-      if (!description) throw new Error("Description is mandatory");
-      if (!password) throw new Error("Password is mandatory");
-      if (!description) throw new Error("Description is mandatory");
-      if (password !== confirmedPassword)
-        throw new Error("Passwords must match!");
+      validateGatewayData(gatewayData);
 
       //Fetch call na backend
       const token: string | null = localStorage.getItem("token");
